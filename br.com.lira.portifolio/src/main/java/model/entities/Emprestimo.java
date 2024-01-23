@@ -1,6 +1,7 @@
 package model.entities;
 
 import model.enums.TipoFinanciamento;
+import model.exception.ExceptionError;
 
 public class Emprestimo {
 
@@ -39,7 +40,13 @@ public class Emprestimo {
         return pessoa;
     }
 
-    public void realizarPagamento(int quantidadeParcelasPagas){
+    public void realizarPagamento(int quantidadeParcelasPagas) throws ExceptionError {
+        if (quantidadeParcelasPagas < 1) {
+            throw new ExceptionError("Quantidade de parcelas a pagar, inválida.");
+        }
+        if (quantidadeParcelasPagas <= (quantidadeMeses - this.quantidadeParcelasPagas)) {
+            throw new ExceptionError("Não é possível pagar mais parcelas do que o necessário.");
+        }
         this.quantidadeParcelasPagas = quantidadeParcelasPagas;
         System.out.println("Pagamento efetuado");
     }

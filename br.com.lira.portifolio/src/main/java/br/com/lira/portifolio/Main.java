@@ -2,22 +2,24 @@ package br.com.lira.portifolio;
 
 import model.entities.*;
 import model.enums.TipoFinanciamento;
+import model.exception.ExceptionError;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import java.util.Date;
 import java.util.Scanner;
 
 
 
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException {
 
         Scanner scanner = new Scanner(System.in);
         SimpleDateFormat dataSimples = new SimpleDateFormat("dd/MM/yyyy");
-        ArrayList<Emprestimo> listaEmprestimo = new ArrayList<Emprestimo>();
-        //ArrayList<TipoPessoa> listaTipoPessoa = new ArrayList<>(List.of(TipoPessoa.values()));
+        ArrayList<Emprestimo> listaEmprestimo = new ArrayList<>();
         Emprestimo emprestimo;
         Pessoa pessoa;
         TipoFinanciamento tipoFinanciamento;
@@ -32,12 +34,11 @@ public class Main {
         emprestimo = new Emprestimo(Integer.toString(criarIdEmprestimo(listaEmprestimo)),10000.00,10, TipoFinanciamento.CONSIGNADO,pessoa);
         listaEmprestimo.add(emprestimo);
 
-
         pessoa = new PessoaJuridica("Elton","11971","2","111");
         emprestimo = new Emprestimo(Integer.toString(criarIdEmprestimo(listaEmprestimo)),20000.00,10, TipoFinanciamento.PESSOAL,pessoa);
         listaEmprestimo.add(emprestimo);
 
-        pessoa = new PessoaFisicaAposentada("Elton","11971","3","111","11/06/2024");
+        pessoa = new PessoaFisicaAposentada("Elton","11971","3","111",dataSimples.parse("11/06/2024"));
         emprestimo = new Emprestimo(Integer.toString(criarIdEmprestimo(listaEmprestimo)),30000.00,10, TipoFinanciamento.ROTATIVO,pessoa);
         listaEmprestimo.add(emprestimo);
 
@@ -53,48 +54,13 @@ public class Main {
             System.out.println("8 - imprimir dados do emprestimo de maior valor");
             System.out.println("9 - imprimir valor médio dos emprestimos");
             System.out.println("10- Imprimir valor total dos emprestimos");
-            System.out.print("Informe uma das opções acima:");
+            System.out.print("Informe uma das opções acima: ");
             opcao = scanner.nextInt();
             switch (opcao) {
                 case (1)://Cadastrar novo emprestimo
-                    String nome = validarCamposDeTextos("Informe o nome: ", scanner);
-                    String telefone = validarCamposDeTextos("Informe o telefone: ", scanner);
-                    String tipoPessoaInformado;
-
-                    do {
-                        tipoPessoaInformado = validarCamposDeTextos(
-                                "F - Pessoa fisica \n" +
-                                        "A - Pessoa fisica aposentado\n" +
-                                        "J - Pessoa juridica\n" +
-                                        "Informe o o tipo da pessoa: ", scanner);
-
-                        if (tipoPessoaInformado == "A" || tipoPessoaInformado == "F") {
-                            String id = validarCamposDeTextos("Informe o Cpf: ", scanner);
-                            String tituloEleitor = validarCamposDeTextos("Informe o título de Eleitor: ", scanner);
-                            if (tipoPessoaInformado == "A") {
-                                pessoa = new PessoaFisica(nome, telefone, id, tituloEleitor);
-                            } else {
-                                System.out.print("\"Informe a data da aposentadoria (dd/MM/yyyy): \"");
-                                data = dataSimples.format(scanner.next());
-                                pessoa = new PessoaFisicaAposentada(nome, telefone, id, tituloEleitor, data);
-                            }
-                        } else if (tipoPessoaInformado == "J") {
-                            String id = validarCamposDeTextos("Informe o Cnpj: ", scanner);
-                            String inscriçãoMunicipal = validarCamposDeTextos("Informe a inscrição municipal: ", scanner);
-                        } else {
-                            System.err.println("Opção inválida: Informe uma das opções:");
-                        }
-                        System.out.println("Informe o valor do emprestimo: ");
-                        Double valorEmprestimo = scanner.nextDouble();
-                        System.out.println("Informe a quantidade de meses do emprestimo: ");
-                        int quantidadeMeses = scanner.nextInt();
-                        System.out.println("Informe o tipo financiamento PESSOAL/ROTATIVO/CONSIGNADO ");
-                        tipoFinanciamento = TipoFinanciamento.valueOf(scanner.next());
-                        emprestimo = new Emprestimo(Integer.toString(criarIdEmprestimo(listaEmprestimo)),valorEmprestimo,quantidadeMeses, tipoFinanciamento,pessoa);
-                        listaEmprestimo.add(emprestimo);
-                    } while (tipoPessoaInformado != "A" && tipoPessoaInformado != "F" && tipoPessoaInformado != "J");
-
-
+                    pessoa = cadastrarPessoa(scanner, dataSimples, pessoa);
+                    emprestimo = cadastrarEmprestimo(scanner, listaEmprestimo, pessoa);
+                    listaEmprestimo.add(emprestimo);
                     break;
                 case (2)://Realizar emprestimo
                     realizarPagamentoParcelas(scanner, listaEmprestimo);
@@ -108,7 +74,7 @@ public class Main {
                 case (5)://5 - Calcular valor total do financiamento
                     consultarValorTotalContrato(scanner, listaEmprestimo);
                     break;
-                case (6):
+                case (6)://6 - Imprimir todos emprestimos
                     listarEmprestimos(listaEmprestimo);
                     break;
                 case (7):
@@ -120,12 +86,64 @@ public class Main {
                 case (9):
                     imprimirValorMédioEmprestimos(listaEmprestimo);
                     break;
-                case (10):
+                case (10)://10- Imprimir valor total dos emprestimos
+                    imprimirValorTotalEmprestimos(listaEmprestimo);
                     break;
             }
         }while (opcao != 0);
         System.out.println("Fim de programa!");
     }
+
+    private static Emprestimo cadastrarEmprestimo(Scanner scanner, ArrayList<Emprestimo> listaEmprestimo, Pessoa pessoa) {
+        TipoFinanciamento tipoFinanciamento;
+        Emprestimo emprestimo;
+        System.out.println("Informe o valor do emprestimo: ");
+        Double valorEmprestimo = scanner.nextDouble();
+        System.out.println("Informe a quantidade de meses do emprestimo: ");
+        int quantidadeMeses = scanner.nextInt();
+        System.out.println("Informe o tipo financiamento PESSOAL/ROTATIVO/CONSIGNADO ");
+        tipoFinanciamento = TipoFinanciamento.valueOf(scanner.next());
+        emprestimo = new Emprestimo(Integer.toString(criarIdEmprestimo(listaEmprestimo)),valorEmprestimo,quantidadeMeses, tipoFinanciamento, pessoa);
+        return emprestimo;
+    }
+
+    private static Pessoa cadastrarPessoa(Scanner scanner, SimpleDateFormat dataSimples, Pessoa pessoa) {
+        Date data;
+        System.out.print("Informe o nome: ");
+        scanner.nextLine();
+        String nome = scanner.nextLine().trim().toUpperCase();
+        String telefone = validarCamposDeTextos("Informe o telefone: ", scanner);
+        String tipoPessoaInformado;
+        do {
+            tipoPessoaInformado = validarCamposDeTextos(
+                            "F - Pessoa fisica "+
+                            "A - Pessoa fisica aposentado "+
+                            "J - Pessoa juridica " +
+                            "Informe o tipo da pessoa:", scanner);
+        } while (!tipoPessoaInformado.equals("A") && !tipoPessoaInformado.equals("F") && !tipoPessoaInformado.equals("J"));
+            if (tipoPessoaInformado.equals("A")) {
+                String id = validarCamposDeTextos("Informe o Cpf: ", scanner);
+                String tituloEleitor = validarCamposDeTextos("Informe o título de Eleitor: ", scanner);
+                pessoa = new PessoaFisica(nome, telefone, id, tituloEleitor);
+
+            } else if(tipoPessoaInformado.equals("F")) {
+                String id = validarCamposDeTextos("Informe o Cpf: ", scanner);
+                String tituloEleitor = validarCamposDeTextos("Informe o título de Eleitor: ", scanner);
+                try {
+                    System.out.print("Informe a data da aposentadoria (dd/MM/yyyy): ");
+                    data = dataSimples.parse(scanner.next());
+                    pessoa = new PessoaFisicaAposentada(nome, telefone, id, tituloEleitor, data);
+                }catch (Exception e){
+                    System.err.print("Data invalida da aposentaria inválida");
+                }
+            } else {
+                String id = validarCamposDeTextos("Informe o Cnpj: ", scanner);
+                String inscricaoMunicipal = validarCamposDeTextos("Informe a inscrição municipal: ", scanner);
+                pessoa = new PessoaJuridica(nome, telefone,id,inscricaoMunicipal);
+            }
+        return pessoa;
+    }
+
     /*public static TipoPessoa validarEscolha(String msg, Scanner scanner, ArrayList<Enum> lista ) {
         boolean valido = false;
         String campoInformado;
@@ -142,15 +160,14 @@ public class Main {
         return campoInformado;
     }*/
     public static String validarCamposDeTextos(String msg, Scanner scanner ) {
-        boolean valido = false;
+        boolean valido = true;
         String campoInformado;
-        System.out.print(msg);
         do {
-            campoInformado = scanner.nextLine().toUpperCase().trim();
+            System.out.print(msg);
+            campoInformado = scanner.next().toUpperCase().trim();
             if (campoInformado.isBlank()) {
-                System.err.print("Campos inválido: O campo está em branco \n digite um valor correto: ");
-            } else {
-                valido = true;
+                System.err.print("Campos inválido: O campo está em branco \n");
+                valido = false;
             }
         } while (!valido);
         return campoInformado;
@@ -171,10 +188,14 @@ public class Main {
         String idEmprestimo = validarCamposDeTextos("Informe o número do financiamento que deseja pagar: ", scanner);
         emprestimo = buscarEmprestimoPorId(listaEmprestimo, idEmprestimo);
         if (emprestimo != null){
-            int quantidadeParcelasPagas = 0 ;
-            System.out.print("Informe a quantidade de parcelas para pagamento: ");
-            quantidadeParcelasPagas = scanner.nextInt();
-            emprestimo.realizarPagamento(quantidadeParcelasPagas);
+            try{
+                int quantidadeParcelasPagas;
+                System.out.print("Informe a quantidade de parcelas para pagamento: ");
+                quantidadeParcelasPagas = scanner.nextInt();
+                emprestimo.realizarPagamento(quantidadeParcelasPagas);
+            }catch(ExceptionError e){
+                System.err.print(e+"\n\n");
+            }
         }
         else{
             System.err.print("Emprestimo não encontrado\n\n");
@@ -185,7 +206,7 @@ public class Main {
         String idEmprestimo = validarCamposDeTextos("Informe o número do emprestimo para consultar a mensalidade: ", scanner);
         emprestimo = buscarEmprestimoPorId(listaEmprestimo, idEmprestimo);
         if (emprestimo != null){
-            emprestimo.calcularValorParcelaEmprestimo();
+            System.out.println(emprestimo.calcularValorParcelaEmprestimo());
         }
         else{
             System.err.print("Emprestimo não encontrado\n\n");
@@ -196,7 +217,7 @@ public class Main {
         String idEmprestimo = validarCamposDeTextos("Informe o número do emprestimo para consultar a mensalidade: ", scanner);
         emprestimo = buscarEmprestimoPorId(listaEmprestimo, idEmprestimo);
         if (emprestimo != null){
-            emprestimo.calcularValorTotalEmprestimo();
+            System.out.println(emprestimo.calcularValorTotalEmprestimo());
         }
         else{
             System.err.print("Emprestimo não encontrado\n\n");
@@ -207,7 +228,7 @@ public class Main {
         String idEmprestimo = validarCamposDeTextos("Informe o número do financiamento que consultar a situacao: ", scanner);
         emprestimo = buscarEmprestimoPorId(listaEmprestimo, idEmprestimo);
         if (emprestimo != null){
-            emprestimo.consultarSituacaoContrato();
+            System.out.println(emprestimo.consultarSituacaoContrato()? "CONTRATO QUITADO":"CONTRATO M ABERTO");
         }
         else{
             System.err.print("Emprestimo não encontrado\n\n");
@@ -221,20 +242,27 @@ public class Main {
                .stream()
                .mapToDouble(Emprestimo::getValorEmprestimo)
                .average().orElse(0);
-        System.out.println("Valor médio dos emprestimos: "+ valorMedioEmprestimos);
+        System.out.println("Valor médio dos emprestimos: "+ String.format("%.2f",valorMedioEmprestimos));
     }
     public static void imprimirValorMenorEmprestimos(ArrayList<Emprestimo> listaEmprestimo){
-        double valorMedioEmprestimos = listaEmprestimo
+        double valorMenorEmprestimos = listaEmprestimo
                .stream()
                .mapToDouble(Emprestimo::getValorEmprestimo)
                .min().orElse(0);
-        System.out.println("Valor Menor dos emprestimos: "+ valorMedioEmprestimos);
+        System.out.println("Valor Menor dos emprestimos: "+ String.format("%.2f",valorMenorEmprestimos));
     }
     public static void imprimirValorMaiorEmprestimos(ArrayList<Emprestimo> listaEmprestimo){
-        double valorMedioEmprestimos = listaEmprestimo
+        double valorMaiorEmprestimos = listaEmprestimo
                .stream()
                .mapToDouble(Emprestimo::getValorEmprestimo)
                .max().orElse(0);
-        System.out.println("Valor Maior dos emprestimos: "+ valorMedioEmprestimos);
+        System.out.println("Valor Maior dos emprestimos: "+ String.format("%.2f",valorMaiorEmprestimos));
+    }
+    public static void imprimirValorTotalEmprestimos(ArrayList<Emprestimo> listaEmprestimo){
+        double valorTotalEmprestimos = listaEmprestimo
+                .stream()
+                .mapToDouble(Emprestimo::getValorEmprestimo)
+                .sum();
+        System.out.println("Valor total dos emprestimos: "+ String.format("%.2f",valorTotalEmprestimos));
     }
 }

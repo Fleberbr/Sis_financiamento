@@ -1,15 +1,17 @@
 package model.entities;
 
+import java.util.Date;
+
 public class PessoaFisicaAposentada extends PessoaFisica{
 
-    private String dataAposentadoria;
+    private Date dataAposentadoria;
 
-    public PessoaFisicaAposentada(String nome, String telefone, String id, String tituloEleitor, String dataAposentadoria) {
+    public PessoaFisicaAposentada(String nome, String telefone, String id, String tituloEleitor, Date dataAposentadoria) {
         super(nome, telefone, id, tituloEleitor);
         this.dataAposentadoria = dataAposentadoria;
     }
 
-    public String getDataAposentadoria() {
+    public Date getDataAposentadoria() {
         return dataAposentadoria;
     }
 

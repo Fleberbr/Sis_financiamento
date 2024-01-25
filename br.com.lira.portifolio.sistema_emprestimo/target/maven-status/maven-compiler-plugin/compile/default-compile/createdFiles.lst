@@ -1,0 +1,9 @@
+br\com\lira\portifolio\model\entities\Pessoa.class
+br\com\lira\portifolio\model\entities\PessoaJuridica.class
+br\com\lira\portifolio\model\exception\ExceptionError.class
+br\com\lira\portifolio\model\entities\PessoaFisica.class
+br\com\lira\portifolio\model\entities\Emprestimo.class
+br\com\lira\portifolio\model\enums\TipoFinanciamento.class
+br\com\lira\portifolio\model\enums\TipoPessoa.class
+br\com\lira\portifolio\application\Main.class
+br\com\lira\portifolio\model\entities\PessoaFisicaAposentada.class

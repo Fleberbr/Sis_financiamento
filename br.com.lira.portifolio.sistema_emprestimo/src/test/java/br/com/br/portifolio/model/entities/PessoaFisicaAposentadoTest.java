@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
 
 public class PessoaFisicaAposentadoTest {
 
-    SimpleDateFormat dataSimples = new SimpleDateFormat("dd-MM-YYYY");
+    SimpleDateFormat dataSimples = new SimpleDateFormat("dd-MM-yyyy");
     PessoaFisicaAposentada pessoa;
 
     @BeforeEach // executa antes dos testes

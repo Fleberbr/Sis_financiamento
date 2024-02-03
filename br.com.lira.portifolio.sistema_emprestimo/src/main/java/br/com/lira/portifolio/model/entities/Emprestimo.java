@@ -5,7 +5,7 @@ import br.com.lira.portifolio.model.exception.ExceptionError;
 
 public class Emprestimo {
 
-    private String id;
+    private int id;
     private double valorEmprestimo;
     private int quantidadeMeses;
     private int quantidadeParcelasPagas;
@@ -13,7 +13,7 @@ public class Emprestimo {
     Pessoa pessoa;
 
 
-    public Emprestimo(String id, double valorEmprestimo, int quantidadeMeses,TipoFinanciamento tipoFinanciamento, Pessoa pessoa) {
+    public Emprestimo(int id, double valorEmprestimo, int quantidadeMeses,TipoFinanciamento tipoFinanciamento, Pessoa pessoa) {
         this.id = id;
         this.valorEmprestimo = valorEmprestimo;
         this.quantidadeMeses = quantidadeMeses;
@@ -21,7 +21,16 @@ public class Emprestimo {
         this.pessoa = pessoa;
     }
 
-    public String getId() {
+    public Emprestimo(int id, double valorEmprestimo, int quantidadeMeses,int quantidadeParcelasPagas, TipoFinanciamento tipoFinanciamento, Pessoa pessoa) {
+        this.id = id;
+        this.valorEmprestimo = valorEmprestimo;
+        this.quantidadeMeses = quantidadeMeses;
+        this.quantidadeParcelasPagas = quantidadeParcelasPagas;
+        this.tipoFinanciamento = tipoFinanciamento;
+        this.pessoa = pessoa;
+    }
+
+    public int getId() {
         return id;
     }
     public double getValorEmprestimo() {
@@ -78,5 +87,15 @@ public class Emprestimo {
                 " Quantidade de parcelas: " + getQuantidadeMeses() +
                 " Quantidade de parcelas pagas:" + getQuantidadeParcelasPagas() +
                 " Tipo Financiamento:" + getTipoFinanciamento()  ;
+    }
+
+
+    public String formatarDadosEmprestimoInsercaoArquivo() {
+        return  getId() + "," +
+                getValorEmprestimo() + "," +
+                getQuantidadeMeses() + "," +
+                getQuantidadeParcelasPagas() + "," +
+                getTipoFinanciamento() + "," +
+                pessoa.formatarDadosPessoaInsercaoArquivo() ;
     }
 }

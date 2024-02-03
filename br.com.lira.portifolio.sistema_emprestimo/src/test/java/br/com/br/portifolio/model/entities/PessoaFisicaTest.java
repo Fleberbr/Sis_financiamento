@@ -4,6 +4,7 @@ package br.com.br.portifolio.model.entities;
 import br.com.lira.portifolio.model.entities.Pessoa;
 import br.com.lira.portifolio.model.entities.PessoaFisica;
 
+import br.com.lira.portifolio.model.enums.TipoPessoa;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ public class PessoaFisicaTest {
 
     @BeforeEach // executa antes dos testes
     public void configuracaoInicial() {
-        pessoa = new PessoaFisica("Elton","11971","1","111");
+        pessoa = new PessoaFisica("Elton","11971","1","111", TipoPessoa.PESSOA_FISICA);
     }
 
     @Test

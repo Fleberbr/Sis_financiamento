@@ -2,41 +2,49 @@ package br.com.lira.portifolio.application;
 
 import br.com.lira.portifolio.model.entities.*;
 import br.com.lira.portifolio.model.enums.TipoFinanciamento;
+import br.com.lira.portifolio.model.enums.TipoPessoa;
 import br.com.lira.portifolio.model.exception.ExceptionError;
+import br.com.lira.portifolio.repository.emprestimoRepository;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import java.util.Date;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws ParseException {
+    public static void main(String[] args) throws ParseException, IOException {
 
         Scanner scanner = new Scanner(System.in);
-        SimpleDateFormat dataSimples = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
         ArrayList<Emprestimo> listaEmprestimo = new ArrayList<>();
-        Emprestimo emprestimo;
-        Pessoa pessoa;
         int opcao ;
+        Pessoa pessoa = null;
+        Emprestimo emprestimo;
 
-        //System.out.println("Data nascimento: ");
-        //Date dataNascimento = dataSimples.parse(scanner.next());
-        //String dataNascimento = dataSimples.format("11/06/2024");
+        /*try {
+            emprestimoRepository emprestimoRepository = new emprestimoRepository("C:\\Users\\elton\\OneDrive\\Documentos\\Projetos programação\\ws-eclipse\\sisEmprestimo\\br.com.lira.portifolio.sistema_emprestimo");
+        }catch (IOException e){
+            System.err.println("Erro ao setar o caminho do path");
+        }
+        System.out.println("Data nascimento: ");
+        Date dataNascimento = dataSimples.parse(scanner.next());
+        String dataNascimento = dataSimples.format("11/06/2024");
 
         pessoa = new PessoaFisica("Elton","11971","1","111");
         emprestimo = new Emprestimo(Integer.toString(criarIdEmprestimo(listaEmprestimo)),10000.00,10, TipoFinanciamento.CONSIGNADO,pessoa);
-        listaEmprestimo.add(emprestimo);
+        emprestimoRepository.inserirDadosArquivoEmprestimo(emprestimo);
 
         pessoa = new PessoaJuridica("Elton","11971","2","111");
         emprestimo = new Emprestimo(Integer.toString(criarIdEmprestimo(listaEmprestimo)),20000.00,10, TipoFinanciamento.PESSOAL,pessoa);
-        listaEmprestimo.add(emprestimo);
+        emprestimoRepository.inserirDadosArquivoEmprestimo(emprestimo);
 
-        pessoa = new PessoaFisicaAposentada("Elton","11971","3","111",dataSimples.parse("10-06-2024"));
+        pessoa = new PessoaFisicaAposentada("Elton","11971","3","111",formato.parse("10/06/2024"));
         emprestimo = new Emprestimo(Integer.toString(criarIdEmprestimo(listaEmprestimo)),30000.00,10, TipoFinanciamento.ROTATIVO,pessoa);
-        listaEmprestimo.add(emprestimo);
-
+        emprestimoRepository.inserirDadosArquivoEmprestimo(emprestimo);*/
         do {
             System.out.println("\n************* MENU *************");
             System.out.println("1 - Cadastrar um emprestimo");
@@ -49,6 +57,7 @@ public class Main {
             System.out.println("8 - imprimir dados do emprestimo de maior valor");
             System.out.println("9 - imprimir valor médio dos emprestimos");
             System.out.println("10- Imprimir valor total dos emprestimos");
+            System.out.println("11- Criar arquivo Emprestimo");
             System.out.print("Informe uma das opções acima: ");
             opcao = scanner.nextInt();
             switch (opcao) {
@@ -59,25 +68,30 @@ public class Main {
                    do {
                        emprestimo = cadastrarEmprestimo(scanner, listaEmprestimo, pessoa);
                    }while (emprestimo == null);
-                   listaEmprestimo.add(emprestimo);
+                   emprestimoRepository.inserirDadosArquivoEmprestimo(emprestimo);
+                   //listaEmprestimo.add(emprestimo);
                 }
                 case (2) -> realizarPagamentoParcelas(scanner, listaEmprestimo);
                 case (3) -> consultarSituacaoEmprestimo(scanner, listaEmprestimo);
                 case (4) -> consultarMensalidadeContrato(scanner, listaEmprestimo);
                 case (5) -> consultarValorTotalContrato(scanner, listaEmprestimo);
-                case (6) -> listarEmprestimos(listaEmprestimo);
+                case (6) -> listarEmprestimos(emprestimoRepository.buscarDadosEmprestimo());
+
                 case (7) -> imprimirValorMenorEmprestimos(listaEmprestimo);
                 case (8) -> imprimirValorMaiorEmprestimos(listaEmprestimo);
                 case (9) -> imprimirValorMédioEmprestimos(listaEmprestimo);
                 case (10)-> imprimirValorTotalEmprestimos(listaEmprestimo);
-            }
+                case (11)-> emprestimoRepository.criarArquivoEmprestimo();
+
+
+                }
         }while (opcao != 0);
         System.out.println("Fim de programa!");
     }
 
     private static Pessoa cadastrarPessoa(Scanner scanner, Pessoa pessoa) {
-        SimpleDateFormat dataSimples = new SimpleDateFormat("dd-MM-yyyy");
 
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
         char tipoPessoaInformado ;
         try {
             System.out.print("Informe o nome: ");
@@ -106,9 +120,9 @@ public class Main {
                 System.out.print("Informe o título de Eleitor: ");
                 String tituloEleitor = scanner.next();
                 try {
-                    System.out.print("Informe a data da aposentadoria (dd-MM-yyyy): ");
-                    Date dataAposentadoria = dataSimples.parse(scanner.next());
-                    pessoa = new PessoaFisicaAposentada(nome, telefone, id, tituloEleitor, dataAposentadoria);
+                    System.out.print("Informe a data da aposentadoria (dd/MM/yyyy): ");
+                    String dataAposentadoriaDigitada = scanner.next();
+                    pessoa = new PessoaFisicaAposentada(nome, telefone, id, tituloEleitor, formato.parse(dataAposentadoriaDigitada));
                 } catch (Exception e) {
                     System.err.print("Data invalida da aposentaria inválida");
                 }
@@ -126,7 +140,6 @@ public class Main {
         }
     }
 
-
     private static Emprestimo cadastrarEmprestimo(Scanner scanner, ArrayList<Emprestimo> listaEmprestimo, Pessoa pessoa) {
         try {
             TipoFinanciamento tipoFinanciamento;
@@ -135,9 +148,9 @@ public class Main {
             Double valorEmprestimo = scanner.nextDouble();
             System.out.print("Informe a quantidade de meses do emprestimo: ");
             int quantidadeMeses = scanner.nextInt();
-            System.out.print("Informe o tipo financiamento PESSOAL/ROTATIVO/CONSIGNADO ");
+            System.out.print("Informe o tipo financiamento PESSOAL/ROTATIVO/CONSIGNADO: ");
             tipoFinanciamento = TipoFinanciamento.valueOf(scanner.next().toUpperCase());
-            emprestimo = new Emprestimo(Integer.toString(criarIdEmprestimo(listaEmprestimo)), valorEmprestimo, quantidadeMeses, tipoFinanciamento, pessoa);
+            emprestimo = new Emprestimo(criarIdEmprestimo(), valorEmprestimo, quantidadeMeses, tipoFinanciamento, pessoa);
 
             return emprestimo;
         }catch (Exception e){
@@ -155,12 +168,13 @@ public class Main {
         return true;
     }
 
-    public static int criarIdEmprestimo(ArrayList<Emprestimo> listaEmprestimo){
+    public static int criarIdEmprestimo(){
+        ArrayList<Emprestimo> listaEmprestimo = emprestimoRepository.buscarDadosEmprestimo();
         return (listaEmprestimo.size() == 0) ? 1 : listaEmprestimo.size() + 1;
     }
-    public static Emprestimo buscarEmprestimoPorId(ArrayList<Emprestimo> listaEmprestimo, String idEmprestimo){
+    public static Emprestimo buscarEmprestimoPorId(ArrayList<Emprestimo> listaEmprestimo, int idEmprestimo){
         for (Emprestimo emprestimo : listaEmprestimo) {
-            if (emprestimo.getId().equalsIgnoreCase(idEmprestimo))
+            if (emprestimo.getId() == idEmprestimo)
                 return emprestimo;
         }
         return null;
@@ -169,7 +183,7 @@ public class Main {
     private static void realizarPagamentoParcelas(Scanner scanner, ArrayList<Emprestimo> listaEmprestimo) {
         Emprestimo emprestimo;
         System.out.print("Informe o núero do financiamento que deseja efetuar pagamento: ");
-        String idEmprestimo =  scanner.next();
+        int idEmprestimo =  scanner.nextInt();
         emprestimo = buscarEmprestimoPorId(listaEmprestimo, idEmprestimo);
         if (emprestimo != null){
             try{
@@ -188,7 +202,7 @@ public class Main {
     private static void consultarMensalidadeContrato(Scanner scanner, ArrayList<Emprestimo> listaEmprestimo) {
         Emprestimo emprestimo;
         System.out.print("Informe o número do emprestimo para consultar a mensalidade: ");
-        String idEmprestimo =  scanner.next();
+        int idEmprestimo =  scanner.nextInt();
 
         emprestimo = buscarEmprestimoPorId(listaEmprestimo, idEmprestimo);
         if (emprestimo != null){
@@ -201,7 +215,7 @@ public class Main {
     private static void consultarValorTotalContrato(Scanner scanner, ArrayList<Emprestimo> listaEmprestimo) {
         Emprestimo emprestimo;
         System.out.print("Informe o número do emprestimo para consultar a mensalidade: ");
-        String idEmprestimo =  scanner.next();
+        int idEmprestimo =  scanner.nextInt();
         emprestimo = buscarEmprestimoPorId(listaEmprestimo, idEmprestimo);
         if (emprestimo != null){
             System.out.println(emprestimo.calcularValorTotalEmprestimo());
@@ -213,7 +227,7 @@ public class Main {
     private static void consultarSituacaoEmprestimo(Scanner scanner, ArrayList<Emprestimo> listaEmprestimo) {
         Emprestimo emprestimo;
         System.out.print("Informe o número do financiamento que consultar a situacao: ");
-        String idEmprestimo =  scanner.next();
+        int idEmprestimo =  scanner.nextInt();
         emprestimo = buscarEmprestimoPorId(listaEmprestimo, idEmprestimo);
         if (emprestimo != null){
             System.out.println(emprestimo.consultarContratoQuitado()? "CONTRATO QUITADO":"CONTRATO M ABERTO");
@@ -222,11 +236,9 @@ public class Main {
             System.err.print("Emprestimo não encontrado\n\n");
         }
     }
-
     public static void listarEmprestimos(ArrayList<Emprestimo> listaEmprestimo){
         listaEmprestimo.forEach(System.out::println);
     }
-
     public static void imprimirValorMédioEmprestimos(ArrayList<Emprestimo> listaEmprestimo){
         double valorMedioEmprestimos = listaEmprestimo
                .stream()

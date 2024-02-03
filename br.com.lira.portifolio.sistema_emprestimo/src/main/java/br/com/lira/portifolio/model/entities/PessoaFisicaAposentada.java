@@ -1,13 +1,17 @@
 package br.com.lira.portifolio.model.entities;
 
+import br.com.lira.portifolio.model.enums.TipoPessoa;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PessoaFisicaAposentada extends PessoaFisica{
 
     private Date dataAposentadoria;
+    SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 
     public PessoaFisicaAposentada(String nome, String telefone, String id, String tituloEleitor, Date dataAposentadoria) {
-        super(nome, telefone, id, tituloEleitor);
+        super(nome, telefone, id, tituloEleitor, TipoPessoa.PESSOA_FISICA_APOSENTADA);
         this.dataAposentadoria = dataAposentadoria;
     }
 
@@ -22,11 +26,21 @@ public class PessoaFisicaAposentada extends PessoaFisica{
 
     @Override
     public String toString() {
-        return  " Cpf: " + getid() +
+        return  " Cpf: " + getId() +
                 " Nome: " + getNome() +
                 " Telefone: " + getTelefone()+
                 " Titulo de eleitor: " + getTituloEleitor() +
                 " Data aposentadoria: " + getDataAposentadoria();
+    }
+
+    @Override
+    public String formatarDadosPessoaInsercaoArquivo() {
+        return  getTipoPessoa()+ ","+
+                getId() + "," +
+                getNome() + "," +
+                getTelefone() + "," +
+                getTituloEleitor() + "," +
+                formato.format(getDataAposentadoria());
     }
 }
 

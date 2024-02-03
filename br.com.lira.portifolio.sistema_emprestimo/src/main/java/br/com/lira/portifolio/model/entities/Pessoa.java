@@ -1,14 +1,24 @@
 package br.com.lira.portifolio.model.entities;
 
+import br.com.lira.portifolio.model.enums.TipoPessoa;
+
 public abstract class Pessoa {
 
     private String nome;
     private String telefone;
+    private TipoPessoa tipoPessoa;
 
-    public Pessoa(String nome, String telefone) {
+
+    public Pessoa(String nome, String telefone,TipoPessoa tipoPessoa) {
         this.nome = nome;
         this.telefone = telefone;
+        this.tipoPessoa = tipoPessoa;
     }
+
+    public TipoPessoa getTipoPessoa() {
+        return tipoPessoa;
+    }
+
     public String getNome() {
         return nome;
     }
@@ -17,5 +27,5 @@ public abstract class Pessoa {
     }
     public abstract double percentualImposto();
 
-
+    public abstract String formatarDadosPessoaInsercaoArquivo();
 }

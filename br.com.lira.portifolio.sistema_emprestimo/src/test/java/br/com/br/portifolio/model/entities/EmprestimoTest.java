@@ -4,6 +4,7 @@ import br.com.lira.portifolio.model.entities.Emprestimo;
 import br.com.lira.portifolio.model.entities.Pessoa;
 import br.com.lira.portifolio.model.entities.PessoaFisica;
 import br.com.lira.portifolio.model.enums.TipoFinanciamento;
+import br.com.lira.portifolio.model.enums.TipoPessoa;
 import br.com.lira.portifolio.model.exception.ExceptionError;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,8 +25,8 @@ public class EmprestimoTest {
 
     @BeforeEach // executa antes dos testes
     public void configuracaoInicial() {
-        this.pessoa = new PessoaFisica("Elton","11971","1","111");
-        this.emprestimo = new Emprestimo(Integer.toString(criarIdEmprestimo(listaEmprestimo)),10000.00,10,TipoFinanciamento.CONSIGNADO, pessoa);
+        this.pessoa = new PessoaFisica("Elton","11971","1","111", TipoPessoa.PESSOA_FISICA);
+        this.emprestimo = new Emprestimo(1,10000.00,10,TipoFinanciamento.CONSIGNADO, pessoa);
     }
 
 

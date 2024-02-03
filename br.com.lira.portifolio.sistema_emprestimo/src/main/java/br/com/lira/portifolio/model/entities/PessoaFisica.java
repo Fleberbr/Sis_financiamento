@@ -1,17 +1,25 @@
 package br.com.lira.portifolio.model.entities;
 
+import br.com.lira.portifolio.model.enums.TipoPessoa;
+
 public class PessoaFisica extends Pessoa{
 
     private String id;
     private String tituloEleitor;
 
-    public PessoaFisica(String nome, String telefone, String id, String tituloEleitor) {
-        super(nome, telefone);
+    public PessoaFisica(String nome, String telefone, String id, String tituloEleitor, TipoPessoa tipoPessoa) {
+        super(nome, telefone, tipoPessoa);
         this.id = id;
         this.tituloEleitor = tituloEleitor;
     }
 
-    public String getid() {
+    public PessoaFisica(String nome, String telefone, String id, String tituloEleitor) {
+        super(nome, telefone, TipoPessoa.PESSOA_FISICA);
+        this.id = id;
+        this.tituloEleitor = tituloEleitor;
+    }
+
+    public String getId() {
         return id;
     }
     public String getTituloEleitor() {
@@ -29,5 +37,13 @@ public class PessoaFisica extends Pessoa{
                " Nome: " + getNome() +
                " Telefone: " + getTelefone()+
                " Titulo de eleitor: " + tituloEleitor ;
+    }
+    @Override
+    public String formatarDadosPessoaInsercaoArquivo() {
+        return  getTipoPessoa()+ ","+
+                getId() + "," +
+                getNome() + "," +
+                getTelefone() + "," +
+                getTituloEleitor()  + "," ;
     }
 }

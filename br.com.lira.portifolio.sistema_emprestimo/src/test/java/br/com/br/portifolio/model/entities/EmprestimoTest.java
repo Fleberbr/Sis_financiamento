@@ -1,11 +1,11 @@
 package br.com.br.portifolio.model.entities;
 
-import br.com.lira.portifolio.model.entities.Emprestimo;
-import br.com.lira.portifolio.model.entities.Pessoa;
-import br.com.lira.portifolio.model.entities.PessoaFisica;
-import br.com.lira.portifolio.model.enums.TipoFinanciamento;
-import br.com.lira.portifolio.model.enums.TipoPessoa;
-import br.com.lira.portifolio.model.exception.ExceptionError;
+import br.com.portifolio.lira.model.entities.Emprestimo;
+import br.com.portifolio.lira.model.entities.Pessoa;
+import br.com.portifolio.lira.model.entities.PessoaFisica;
+import br.com.portifolio.lira.model.enums.TipoFinanciamento;
+import br.com.portifolio.lira.model.enums.TipoPessoa;
+import br.com.portifolio.lira.model.exception.ExceptionError;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

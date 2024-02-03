@@ -1,9 +1,8 @@
 package br.com.br.portifolio.model.entities;
 
 
-import br.com.lira.portifolio.model.entities.Pessoa;
-import br.com.lira.portifolio.model.entities.PessoaFisica;
-import br.com.lira.portifolio.model.entities.PessoaJuridica;
+import br.com.portifolio.lira.model.entities.Pessoa;
+import br.com.portifolio.lira.model.entities.PessoaJuridica;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

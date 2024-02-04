@@ -82,13 +82,12 @@ public class Emprestimo {
                   pessoa +
                 " Valor solicitado do emprestimo: " + String.format("%.2f",valorEmprestimo) +
                 " Percentual de Juros: " + getPessoa().percentualImposto()+
-                " Valor do emprestimo com juros: " + calcularValorTotalEmprestimo()+
-                " Valor da parcela: " + calcularValorParcelaEmprestimo() +
+                " Valor do emprestimo com juros: " + String.format("%.2f",calcularValorTotalEmprestimo()) +
+                " Valor da parcela: " + String.format("%.2f", calcularValorParcelaEmprestimo()) +
                 " Quantidade de parcelas: " + getQuantidadeMeses() +
                 " Quantidade de parcelas pagas:" + getQuantidadeParcelasPagas() +
                 " Tipo Financiamento:" + getTipoFinanciamento()  ;
     }
-
 
     public String formatarDadosEmprestimoInsercaoArquivo() {
         return  getId() + "," +

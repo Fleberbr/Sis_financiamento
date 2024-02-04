@@ -35,7 +35,13 @@ public class emprestimoRepository {
         }
     }
 
-    public static void inserirDadosArquivoEmprestimo(Emprestimo emprestimo) {
+    public static boolean deletarArquivoEmprestimo() {
+        boolean resultado = new File(getPath() + "\\emprestimo.csv").delete();
+        System.out.println((resultado) ? "Arquivo deletado com sucesso" : "Não foi possível deletar o arquivo");
+        return resultado;
+    }
+
+    public static void inserirNovoRegistroArquivoEmprestimo(Emprestimo emprestimo) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(getPath() + "\\emprestimo.csv", true))) {
             bufferedWriter.write(emprestimo.formatarDadosEmprestimoInsercaoArquivo());
             bufferedWriter.newLine();
@@ -45,8 +51,24 @@ public class emprestimoRepository {
         }
     }
 
+
+    public static void AtualizarRegistroArquivoEmprestimo(ArrayList<Emprestimo> listaEmprestimo) {
+        deletarArquivoEmprestimo();
+        criarArquivoEmprestimo();
+        for (Emprestimo emprestimo : listaEmprestimo) {
+            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(getPath() + "\\emprestimo.csv", true))) {
+                bufferedWriter.write(emprestimo.formatarDadosEmprestimoInsercaoArquivo());
+                bufferedWriter.newLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public static ArrayList<Emprestimo> buscarDadosEmprestimo() {
         ArrayList<Emprestimo> listaEmprestimo = new ArrayList<>();
+
+        //CSVReader reader = new CSVReader(new FileReader(inputFile), ',');
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(getPath() + "\\emprestimo.csv"))) {
             System.out.println("lendo arquivo de entrada");
@@ -87,7 +109,7 @@ public class emprestimoRepository {
                 listaEmprestimo.add(new Emprestimo(idContrato, valorEmprestimo, quantidadeMeses, quantidadeParcelasPagas, TipoFinanciamento.valueOf(tipoFinanciamento), pessoa));
                 linha = bufferedReader.readLine();
             }
-        }catch(IOException | ParseException | ArrayIndexOutOfBoundsException e){
+        } catch (IOException | ParseException | ArrayIndexOutOfBoundsException e) {
             e.printStackTrace();
         }
         return listaEmprestimo;

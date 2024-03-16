@@ -58,12 +58,8 @@ public class Main {
             opcao = scanner.nextInt();
             switch (opcao) {
                 case (1) -> /*Inserir um novo emprestimo*/{
-                   do {
-                       pessoa = cadastrarPessoa(scanner, pessoa);
-                   }while (pessoa == null);
-                   do {
-                       emprestimo = cadastrarEmprestimo(scanner,pessoa);
-                   }while (emprestimo == null);
+                   pessoa = cadastrarPessoa(scanner, pessoa);
+                   emprestimo = cadastrarEmprestimo(scanner,pessoa);
                    emprestimoRepository.inserirNovoRegistroArquivoEmprestimo(emprestimo);
                    //atualiza a lista de emprestimos, buscando do arquivo
                    listaEmprestimo = emprestimoRepository.buscarDadosEmprestimo();

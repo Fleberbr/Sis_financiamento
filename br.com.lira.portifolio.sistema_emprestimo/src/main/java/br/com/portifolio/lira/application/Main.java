@@ -3,7 +3,7 @@ package br.com.portifolio.lira.application;
 import br.com.portifolio.lira.model.entities.*;
 import br.com.portifolio.lira.model.enums.TipoFinanciamento;
 import br.com.portifolio.lira.model.exception.ExceptionError;
-import br.com.portifolio.lira.repository.emprestimoRepository;
+import br.com.portifolio.lira.repository.emprestimoArquivoRepository;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -16,7 +16,7 @@ public class Main {
     public static void main(String[] args) throws ParseException, IOException {
 
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Emprestimo> listaEmprestimo = emprestimoRepository.buscarDadosEmprestimo();
+        ArrayList<Emprestimo> listaEmprestimo = emprestimoArquivoRepository.buscarDadosEmprestimo();
         int opcao ;
         Pessoa pessoa = null;
         Emprestimo emprestimo;
@@ -57,12 +57,13 @@ public class Main {
             System.out.print("Informe uma das opções acima: ");
             opcao = scanner.nextInt();
             switch (opcao) {
-                case (1) -> /*Inserir um novo emprestimo*/{
+                case (1) -> /*Inserir um novo emprestimo*/
+                {
                    pessoa = cadastrarPessoa(scanner, pessoa);
                    emprestimo = cadastrarEmprestimo(scanner,pessoa);
-                   emprestimoRepository.inserirNovoRegistroArquivoEmprestimo(emprestimo);
+                   emprestimoArquivoRepository.inserirNovoRegistroArquivoEmprestimo(emprestimo);
                    //atualiza a lista de emprestimos, buscando do arquivo
-                   listaEmprestimo = emprestimoRepository.buscarDadosEmprestimo();
+                   listaEmprestimo = emprestimoArquivoRepository.buscarDadosEmprestimo();
                    //listaEmprestimo.add(emprestimo);
                 }
                 case (2) -> realizarPagamentoParcelas(scanner, listaEmprestimo);
@@ -74,7 +75,7 @@ public class Main {
                 case (8) -> imprimirValorMaiorEmprestimos(listaEmprestimo);
                 case (9) -> imprimirValorMédioEmprestimos(listaEmprestimo);
                 case (10)-> imprimirValorTotalEmprestimos(listaEmprestimo);
-                case (11)-> emprestimoRepository.criarArquivoEmprestimo();
+                case (11)-> emprestimoArquivoRepository.criarArquivoEmprestimo();
                 }
         }while (opcao != 0);
         System.out.println("Fim de programa!");
@@ -149,7 +150,6 @@ public class Main {
         }
     }
 
-
     public static boolean validarCampo(String campoInformado) {
         if (campoInformado.isBlank()) {
             System.err.print("Campos inválido: O campo está em branco \n");
@@ -159,7 +159,7 @@ public class Main {
     }
 
     public static int criarIdEmprestimo(){
-        ArrayList<Emprestimo> listaEmprestimo = emprestimoRepository.buscarDadosEmprestimo();
+        ArrayList<Emprestimo> listaEmprestimo = emprestimoArquivoRepository.buscarDadosEmprestimo();
         return (listaEmprestimo.size() == 0) ? 1 : listaEmprestimo.size() + 1;
     }
     public static Emprestimo buscarEmprestimoPorId(ArrayList<Emprestimo> listaEmprestimo, int idEmprestimo){
@@ -181,7 +181,7 @@ public class Main {
                 System.out.print("Informe a quantidade de parcelas para pagamento: ");
                 quantidadeParcelasPagas = scanner.nextInt();
                 emprestimo.realizarPagamento(quantidadeParcelasPagas);
-                emprestimoRepository.AtualizarRegistroArquivoEmprestimo(listaEmprestimo);
+                emprestimoArquivoRepository.AtualizarRegistroArquivoEmprestimo(listaEmprestimo);
             }catch(ExceptionError e){
                 System.err.print(e+"\n\n");
             }

@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class emprestimoRepository {
+public class emprestimoArquivoRepository {
 
     public static String path = "C:\\Users\\elton\\OneDrive\\Documentos\\Projetos programação\\ws-eclipse\\sisEmprestimo\\br.com.lira.portifolio.sistema_emprestimo";
     public static String[] vetorLinha;

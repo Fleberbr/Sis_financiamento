@@ -17,7 +17,7 @@ public class PessoaFisicaAposentadoTest {
     @BeforeEach // executa antes dos testes
     public void configuracaoInicial() throws ParseException {
 
-        pessoa = new PessoaFisicaAposentada("Elton","11971","1","111",dataSimples.parse("24-01-2023"));
+        pessoa = new PessoaFisicaAposentada("Elton","11971","1","111",dataSimples.parse("01-01-2023"));
     }
 
     @Test

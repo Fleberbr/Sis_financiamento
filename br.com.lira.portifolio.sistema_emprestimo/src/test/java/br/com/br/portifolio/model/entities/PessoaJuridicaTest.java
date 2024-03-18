@@ -1,6 +1,7 @@
 package br.com.br.portifolio.model.entities;
 
 
+
 import br.com.portifolio.lira.model.entities.Pessoa;
 import br.com.portifolio.lira.model.entities.PessoaJuridica;
 import org.junit.jupiter.api.Assertions;

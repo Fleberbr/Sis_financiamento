@@ -3,7 +3,6 @@ package br.com.br.portifolio.model.entities;
 
 import br.com.portifolio.lira.model.entities.Pessoa;
 import br.com.portifolio.lira.model.entities.PessoaFisica;
-
 import br.com.portifolio.lira.model.enums.TipoPessoa;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

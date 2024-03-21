@@ -1,5 +1,6 @@
-package br.com.portifolio.lira.repository;
+package br.com.portifolio.lira.model.Dao.Implementacao;
 
+import br.com.portifolio.lira.model.Dao.EmprestimoDao;
 import br.com.portifolio.lira.model.entities.*;
 import br.com.portifolio.lira.model.enums.TipoFinanciamento;
 
@@ -8,8 +9,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-public class emprestimoArquivoRepository {
+public class EmprestimoArquivoRepository implements EmprestimoDao {
 
     public static String path = "C:\\Users\\elton\\OneDrive\\Documentos\\Projetos programação\\ws-eclipse\\sisEmprestimo\\br.com.lira.portifolio.sistema_emprestimo";
     public static String[] vetorLinha;
@@ -41,15 +43,7 @@ public class emprestimoArquivoRepository {
         return resultado;
     }
 
-    public static void inserirNovoRegistroArquivoEmprestimo(Emprestimo emprestimo) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(getPath() + "\\emprestimo.csv", true))) {
-            bufferedWriter.write(emprestimo.formatarDadosEmprestimoInsercaoArquivo());
-            bufferedWriter.newLine();
-            System.out.println("Dados emprestimo inseridos com sucesso");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 
 
     public static void AtualizarRegistroArquivoEmprestimo(ArrayList<Emprestimo> listaEmprestimo) {
@@ -113,6 +107,53 @@ public class emprestimoArquivoRepository {
             e.printStackTrace();
         }
         return listaEmprestimo;
+    }
+
+
+    public static void inserirNovoRegistroArquivoEmprestimo(Emprestimo emprestimo) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(getPath() + "\\emprestimo.csv", true))) {
+            bufferedWriter.write(emprestimo.formatarDadosEmprestimoInsercaoArquivo());
+            bufferedWriter.newLine();
+            System.out.println("Dados emprestimo inseridos com sucesso");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void insert(Emprestimo emprestimo) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(getPath() + "\\emprestimo.csv", true))) {
+            bufferedWriter.write(emprestimo.formatarDadosEmprestimoInsercaoArquivo());
+            bufferedWriter.newLine();
+            System.out.println("Dados emprestimo inseridos com sucesso");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void update(Emprestimo emprestimo) {
+
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+
+    }
+
+    @Override
+    public Emprestimo findById(Integer id) {
+        return null;
+    }
+
+    @Override
+    public List<Emprestimo> findAll() {
+        return null;
+    }
+
+    @Override
+    public List<Emprestimo> findByEmprestimo(Emprestimo emprestimo) {
+        return null;
     }
 }
 

@@ -4,24 +4,20 @@ import br.com.portifolio.lira.model.enums.TipoPessoa;
 
 public class PessoaFisica extends Pessoa{
 
-    private String id;
+
     private String tituloEleitor;
 
     public PessoaFisica(String nome, String telefone, String id, String tituloEleitor, TipoPessoa tipoPessoa) {
-        super(nome, telefone, tipoPessoa);
-        this.id = id;
-        this.tituloEleitor = tituloEleitor;
+        super(nome, telefone,  tipoPessoa, id);
+       this.tituloEleitor = tituloEleitor;
     }
 
     public PessoaFisica(String nome, String telefone, String id, String tituloEleitor) {
-        super(nome, telefone, TipoPessoa.PESSOA_FISICA);
-        this.id = id;
+        super(nome, telefone, TipoPessoa.PESSOA_FISICA, id);
+
         this.tituloEleitor = tituloEleitor;
     }
 
-    public String getId() {
-        return id;
-    }
     public String getTituloEleitor() {
         return tituloEleitor;
     }
@@ -33,8 +29,7 @@ public class PessoaFisica extends Pessoa{
 
     @Override
     public String toString() {
-        return " Cpf: " + id +
-               " Nome: " + getNome() +
+        return " Nome: " + getNome() +
                " Telefone: " + getTelefone()+
                " Titulo de eleitor: " + tituloEleitor ;
     }

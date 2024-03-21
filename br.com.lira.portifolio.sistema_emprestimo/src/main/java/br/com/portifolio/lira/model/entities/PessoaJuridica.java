@@ -4,18 +4,14 @@ import br.com.portifolio.lira.model.enums.TipoPessoa;
 
 public class PessoaJuridica extends Pessoa{
 
-    private String id;
     private String inscricaoMunicipal;
 
-    public PessoaJuridica(String nome, String telefone, String id, String inscricaoMunicipal) {
-        super(nome, telefone, TipoPessoa.PESSOA_JURIDICA);
-        this.id = id;
+    public PessoaJuridica(String nome, String telefone,String id, String inscricaoMunicipal) {
+        super(nome, telefone, TipoPessoa.PESSOA_JURIDICA, id);
         this.inscricaoMunicipal = inscricaoMunicipal;
     }
 
-    public String getId() {
-        return id;
-    }
+
     public String getInscricaoMunicipal() {
         return inscricaoMunicipal;
     }
@@ -27,8 +23,7 @@ public class PessoaJuridica extends Pessoa{
 
     @Override
     public String toString() {
-        return  " Cnpj: " + id +
-                " Nome: " + getNome()+
+        return  " Nome: " + getNome()+
                 " Telefone: " + getTelefone()+
                 " Inscrição municipal: " + inscricaoMunicipal ;
     }

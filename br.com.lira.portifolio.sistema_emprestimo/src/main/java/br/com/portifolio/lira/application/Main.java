@@ -3,7 +3,8 @@ package br.com.portifolio.lira.application;
 import br.com.portifolio.lira.model.entities.*;
 import br.com.portifolio.lira.model.enums.TipoFinanciamento;
 import br.com.portifolio.lira.model.exception.ExceptionError;
-import br.com.portifolio.lira.repository.emprestimoArquivoRepository;
+import br.com.portifolio.lira.model.Dao.Implementacao.EmprestimoArquivoRepository;
+import br.com.portifolio.lira.service.EmprestimoService;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -16,7 +17,7 @@ public class Main {
     public static void main(String[] args) throws ParseException, IOException {
 
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Emprestimo> listaEmprestimo = emprestimoArquivoRepository.buscarDadosEmprestimo();
+        ArrayList<Emprestimo> listaEmprestimo = EmprestimoArquivoRepository.buscarDadosEmprestimo();
         int opcao ;
         Pessoa pessoa = null;
         Emprestimo emprestimo;
@@ -57,13 +58,15 @@ public class Main {
             System.out.print("Informe uma das opções acima: ");
             opcao = scanner.nextInt();
             switch (opcao) {
-                case (1) -> /*Inserir um novo emprestimo*/
+                case (1) ->
                 {
-                   pessoa = cadastrarPessoa(scanner, pessoa);
-                   emprestimo = cadastrarEmprestimo(scanner,pessoa);
-                   emprestimoArquivoRepository.inserirNovoRegistroArquivoEmprestimo(emprestimo);
+                   pessoa = instanciarPessoa(scanner, pessoa);
+                   emprestimo = instanciarEmprestimo(scanner,pessoa);
+                   EmprestimoService emprestimoService = new EmprestimoService();
+
+                   EmprestimoArquivoRepository.inserirNovoRegistroArquivoEmprestimo(emprestimo);
                    //atualiza a lista de emprestimos, buscando do arquivo
-                   listaEmprestimo = emprestimoArquivoRepository.buscarDadosEmprestimo();
+                   listaEmprestimo = EmprestimoArquivoRepository.buscarDadosEmprestimo();
                    //listaEmprestimo.add(emprestimo);
                 }
                 case (2) -> realizarPagamentoParcelas(scanner, listaEmprestimo);
@@ -75,13 +78,13 @@ public class Main {
                 case (8) -> imprimirValorMaiorEmprestimos(listaEmprestimo);
                 case (9) -> imprimirValorMédioEmprestimos(listaEmprestimo);
                 case (10)-> imprimirValorTotalEmprestimos(listaEmprestimo);
-                case (11)-> emprestimoArquivoRepository.criarArquivoEmprestimo();
+                case (11)-> EmprestimoArquivoRepository.criarArquivoEmprestimo();
                 }
         }while (opcao != 0);
         System.out.println("Fim de programa!");
     }
 
-    private static Pessoa cadastrarPessoa(Scanner scanner, Pessoa pessoa) {
+    private static Pessoa instanciarPessoa(Scanner scanner, Pessoa pessoa) {
 
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
         char tipoPessoaInformado ;
@@ -131,7 +134,7 @@ public class Main {
             return null;
         }
     }
-    private static Emprestimo cadastrarEmprestimo(Scanner scanner, Pessoa pessoa) {
+    private static Emprestimo instanciarEmprestimo(Scanner scanner, Pessoa pessoa) {
         try {
             TipoFinanciamento tipoFinanciamento;
             Emprestimo emprestimo;
@@ -159,7 +162,7 @@ public class Main {
     }
 
     public static int criarIdEmprestimo(){
-        ArrayList<Emprestimo> listaEmprestimo = emprestimoArquivoRepository.buscarDadosEmprestimo();
+        ArrayList<Emprestimo> listaEmprestimo = EmprestimoArquivoRepository.buscarDadosEmprestimo();
         return (listaEmprestimo.size() == 0) ? 1 : listaEmprestimo.size() + 1;
     }
     public static Emprestimo buscarEmprestimoPorId(ArrayList<Emprestimo> listaEmprestimo, int idEmprestimo){
@@ -181,7 +184,7 @@ public class Main {
                 System.out.print("Informe a quantidade de parcelas para pagamento: ");
                 quantidadeParcelasPagas = scanner.nextInt();
                 emprestimo.realizarPagamento(quantidadeParcelasPagas);
-                emprestimoArquivoRepository.AtualizarRegistroArquivoEmprestimo(listaEmprestimo);
+                EmprestimoArquivoRepository.AtualizarRegistroArquivoEmprestimo(listaEmprestimo);
             }catch(ExceptionError e){
                 System.err.print(e+"\n\n");
             }
@@ -197,7 +200,8 @@ public class Main {
 
         emprestimo = buscarEmprestimoPorId(listaEmprestimo, idEmprestimo);
         if (emprestimo != null){
-            System.out.println(emprestimo.calcularValorParcelaEmprestimo());
+
+            System.out.println(emprestimo.getValorTotalEmprestimo());
         }
         else{
             System.err.print("Emprestimo não encontrado\n\n");
@@ -209,7 +213,7 @@ public class Main {
         int idEmprestimo =  scanner.nextInt();
         emprestimo = buscarEmprestimoPorId(listaEmprestimo, idEmprestimo);
         if (emprestimo != null){
-            System.out.println(emprestimo.calcularValorTotalEmprestimo());
+            System.out.println(emprestimo.getValorTotalEmprestimo());
         }
         else{
             System.err.print("Emprestimo não encontrado\n\n");

@@ -1,14 +1,14 @@
 package br.com.portifolio.lira.model.Dao;
 
-import br.com.portifolio.lira.model.entities.Emprestimo;
+import br.com.portifolio.lira.model.entities.Pessoa;
 import java.util.List;
 
-public interface EmprestimoDao {
+public interface PessoaDao {
 
-    public void insert(Emprestimo emprestimo) ;
-    public void update(Emprestimo emprestimo);
+    public void insert(Pessoa pessoa) ;
+    public void update(Pessoa pessoa);
     public void deleteById(Integer id);
-    public Emprestimo findById(Integer id);
-    List<Emprestimo> findAll();
-    List<Emprestimo> findByDepartment(Emprestimo emprestimo);
+    public Pessoa findById(Integer id);
+    List<Pessoa> findAll();
+    List<Pessoa> findByPessoa(Pessoa Pessoa);
 }

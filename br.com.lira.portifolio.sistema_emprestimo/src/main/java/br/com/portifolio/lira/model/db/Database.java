@@ -17,6 +17,7 @@ public class Database {
                 conexao = DriverManager.getConnection(url, propriedade); //Conectar no banco e atribuir à conexao
             } catch (SQLException e) {
                 throw new DbException(e.getMessage());
+                //Veja se a biblioteca foi importada ao projeto
             }
         }
         return conexao;

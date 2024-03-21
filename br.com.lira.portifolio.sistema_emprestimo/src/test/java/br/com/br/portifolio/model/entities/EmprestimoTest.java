@@ -73,7 +73,7 @@ public class EmprestimoTest {
 
     @Test
     public void testeCalcularValorTotalEmprestimo(){
-        Double valorAtual = this.emprestimo.calcularValorTotalEmprestimo();
+        Double valorAtual = this.emprestimo.getValorTotalEmprestimo();
 
         Assertions.assertEquals(11000.00,valorAtual);
     }

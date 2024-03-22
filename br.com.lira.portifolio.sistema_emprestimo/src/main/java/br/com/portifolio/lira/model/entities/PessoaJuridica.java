@@ -23,9 +23,9 @@ public class PessoaJuridica extends Pessoa{
 
     @Override
     public String toString() {
-        return  " Nome: " + getNome()+
-                " Telefone: " + getTelefone()+
-                " Inscrição municipal: " + inscricaoMunicipal ;
+        return  "Nome: " + getNome()+
+                "Telefone: " + getTelefone()+
+                "Inscrição municipal: " + inscricaoMunicipal ;
     }
     @Override
     public String formatarDadosPessoaInsercaoArquivo() {

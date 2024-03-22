@@ -10,7 +10,7 @@ public abstract class Pessoa {
     private String id;
 
 
-    public Pessoa(String nome, String telefone,TipoPessoa tipoPessoa , String id) {
+    public Pessoa(String nome, String telefone, TipoPessoa tipoPessoa, String id) {
         this.nome = nome;
         this.telefone = telefone;
         this.tipoPessoa = tipoPessoa;
@@ -24,12 +24,15 @@ public abstract class Pessoa {
     public String getId() {
         return id;
     }
+
     public String getNome() {
         return nome;
     }
+
     public String getTelefone() {
         return telefone;
     }
+
     public abstract double percentualImposto();
 
     public abstract String formatarDadosPessoaInsercaoArquivo();

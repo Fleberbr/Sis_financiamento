@@ -42,6 +42,18 @@ public class Emprestimo {
         calcularValorParcelaEmprestimo();
     }
 
+    public Emprestimo(Integer id, double valorEmprestimo, int quantidadeMeses,  int quantidadeParcelasPagas, double valorJuros, double valorTotalEmprestimo,  double valorParcela, TipoFinanciamento tipoFinanciamento, Pessoa pessoa) {
+        this.id = id;
+        this.valorEmprestimo = valorEmprestimo;
+        this.quantidadeMeses = quantidadeMeses;
+        this.quantidadeParcelasPagas = quantidadeParcelasPagas;
+        this.valorJuros = valorJuros;
+        this.valorTotalEmprestimo = valorTotalEmprestimo;
+        this.valorParcela = valorParcela;
+        this.tipoFinanciamento = tipoFinanciamento;
+        this.pessoa = pessoa;
+    }
+
     public int getId() {
         return id;
     }
@@ -111,7 +123,7 @@ public class Emprestimo {
 
     @Override
     public String toString() {
-        return "Número emprestimo: " + id +
+        return "Número emprestimo: " + id + " "+
                 pessoa +
                 " Valor solicitado do emprestimo: " + String.format("%.2f", getValorEmprestimo()) +
                 " Percentual de Juros: " + getPessoa().percentualImposto() +

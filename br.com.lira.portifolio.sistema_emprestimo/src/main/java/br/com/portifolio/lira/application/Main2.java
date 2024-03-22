@@ -30,13 +30,23 @@ public class Main2 {
         Date dataNascimento = dataSimples.parse(scanner.next());
         //String dataNascimento = dataSimples.format("11/06/2024");*/
 
-        pessoa = new PessoaFisicaAposentada("EltonAposentadoMonster","11111","3","222",dataSimples.parse("31-01-2024"));
+        System.out.print("Informe um id para pesquisa: ");
+        int id = scanner.nextInt();
+
+        //pessoa = pessoaDao.findById(id);
+        //System.out.println(pessoa);
+
+        emprestimo = emprestimoDao.findById(id);
+        System.out.println(emprestimo);
+
+
+        //pessoa = new PessoaFisicaAposentada("EltonAposentadoMonster","11111","3","222",dataSimples.parse("31-01-2024"));
         //pessoaDao.update(pessoa);
         //pessoaDao.insert(pessoa);
-        emprestimo = new Emprestimo(2,10000.00,10, TipoFinanciamento.CONSIGNADO,pessoa);
-        emprestimo.realizarPagamento(3);
+        //emprestimo = new Emprestimo(2,10000.00,10, TipoFinanciamento.CONSIGNADO,pessoa);
+        //emprestimo.realizarPagamento(3);
         //emprestimoDao.insert(emprestimo);
-        emprestimoDao.update(emprestimo);
+        //emprestimoDao.update(emprestimo);
 
 
         /*pessoa = new PessoaFisica("EltonFisico","11971","1","111");

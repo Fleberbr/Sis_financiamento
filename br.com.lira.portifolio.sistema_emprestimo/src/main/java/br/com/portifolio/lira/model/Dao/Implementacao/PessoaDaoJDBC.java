@@ -5,10 +5,7 @@ import br.com.portifolio.lira.model.Dao.PessoaDao;
 import br.com.portifolio.lira.model.db.Database;
 import br.com.portifolio.lira.model.db.DbException;
 
-import br.com.portifolio.lira.model.entities.Pessoa;
-import br.com.portifolio.lira.model.entities.PessoaFisica;
-import br.com.portifolio.lira.model.entities.PessoaFisicaAposentada;
-import br.com.portifolio.lira.model.entities.PessoaJuridica;
+import br.com.portifolio.lira.model.entities.*;
 import br.com.portifolio.lira.model.enums.TipoPessoa;
 
 import java.sql.*;
@@ -34,17 +31,16 @@ public class PessoaDaoJDBC implements PessoaDao {
             statement.setString(1, pessoa.getId());
             statement.setString(2, pessoa.getNome());
             statement.setString(3, pessoa.getTelefone());
-            if  (TipoPessoa.PESSOA_JURIDICA.equals(pessoa.getTipoPessoa())) {
+            if (TipoPessoa.PESSOA_JURIDICA.equals(pessoa.getTipoPessoa())) {
                 statement.setString(4, ((PessoaJuridica) pessoa).getInscricaoMunicipal());
                 statement.setString(5, (null));
                 statement.setString(6, (null));
-            } else{
+            } else {
                 statement.setString(4, (null));//inscricação municipal
-                if (TipoPessoa.PESSOA_FISICA.equals(pessoa.getTipoPessoa())){
+                if (TipoPessoa.PESSOA_FISICA.equals(pessoa.getTipoPessoa())) {
                     statement.setString(5, ((PessoaFisica) pessoa).getTituloEleitor());
                     statement.setString(6, null);
-                }
-                else {
+                } else {
                     statement.setString(5, ((PessoaFisicaAposentada) pessoa).getTituloEleitor());
                     statement.setDate(6, new java.sql.Date(((PessoaFisicaAposentada) pessoa).getDataAposentadoria().getTime()));
                 }
@@ -54,13 +50,12 @@ public class PessoaDaoJDBC implements PessoaDao {
             int linhasAlteradas = statement.executeUpdate();
             if (linhasAlteradas > 0) {
                 System.out.println("Cliente cadastrado com sucesso.");
-            }
-            else {
+            } else {
                 throw new DbException("Erro inesperado, nenhuma linha foi alterada");
             }
-        }catch (SQLException | ClassCastException e){
+        } catch (SQLException | ClassCastException e) {
             throw new DbException(e.getMessage());
-        }finally {
+        } finally {
             Database.closeStatement(statement);
         }
 
@@ -77,20 +72,19 @@ public class PessoaDaoJDBC implements PessoaDao {
                     " tituloEleitor = ?," +
                     " dataAposentadoria = ?," +
                     " tipoPessoa = ? "
-                    + "WHERE Id = ?" );
+                    + "WHERE Id = ?");
             statement.setString(1, pessoa.getNome());
             statement.setString(2, pessoa.getTelefone());
-            if  (TipoPessoa.PESSOA_JURIDICA.equals(pessoa.getTipoPessoa())) {
+            if (TipoPessoa.PESSOA_JURIDICA.equals(pessoa.getTipoPessoa())) {
                 statement.setString(3, ((PessoaJuridica) pessoa).getInscricaoMunicipal());
                 statement.setString(4, (null));
                 statement.setString(5, (null));
-            } else{
+            } else {
                 statement.setString(3, (null));//inscricação municipal
-                if (TipoPessoa.PESSOA_FISICA.equals(pessoa.getTipoPessoa())){
+                if (TipoPessoa.PESSOA_FISICA.equals(pessoa.getTipoPessoa())) {
                     statement.setString(4, ((PessoaFisica) pessoa).getTituloEleitor());
                     statement.setString(5, null);
-                }
-                else {
+                } else {
                     statement.setString(4, ((PessoaFisicaAposentada) pessoa).getTituloEleitor());
                     statement.setDate(5, new java.sql.Date(((PessoaFisicaAposentada) pessoa).getDataAposentadoria().getTime()));
                 }
@@ -101,24 +95,82 @@ public class PessoaDaoJDBC implements PessoaDao {
             if (linhasAlteradas > 0) {
                 System.out.println("Dados cadastrais atualizado com sucesso!");
             } else {
-            throw new DbException("Erro inesperado, nenhuma linha foi alterada");
+                throw new DbException("Erro inesperado, nenhuma linha foi alterada");
             }
 
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new DbException(e.getMessage());
-        }finally {
+        } finally {
             Database.closeStatement(statement);
         }
     }
 
     @Override
     public void deleteById(Integer id) {
+        PreparedStatement statement = null;
+        try {
+            statement = conexao.prepareStatement("DELETE FROM PESSOA " +
+                    "WHERE Id = ?");
+            statement.setInt(1, id);
+            statement.executeUpdate();
 
+            //int linhasAlteradas, pode ser usado para testar se foi deletado algum registro.
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        } finally {
+            Database.closeStatement(statement);
+        }
     }
 
     @Override
     public Pessoa findById(Integer id) {
-        return null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = conexao.prepareStatement(
+                        " SELECT * " +
+                            " FROM PESSOA " +
+                            " WHERE Id = ? ");
+            statement.setInt(1, id);
+            resultSet = statement.executeQuery();
+
+            //encontrou registro
+            if (resultSet.next()) {
+                return instanciarPessoa(resultSet);
+
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        } finally {
+            Database.closeStatement(statement);
+            Database.closeResultSet(resultSet);
+        }
+    }
+
+    private Pessoa instanciarPessoa(ResultSet resultSet) throws SQLException {
+        if (TipoPessoa.PESSOA_FISICA.name().equals((resultSet.getString("tipoPessoa")))) {
+            return new PessoaFisica(
+                    resultSet.getString("nome"),
+                    resultSet.getString("telefone"),
+                    resultSet.getString("Id"),
+                    resultSet.getString("tituloEleitor"),
+                    TipoPessoa.PESSOA_FISICA);
+        } else if (TipoPessoa.PESSOA_FISICA_APOSENTADA.name().equals(resultSet.getString("tipoPessoa"))) {
+            return new PessoaFisicaAposentada(
+                    resultSet.getString("nome"),
+                    resultSet.getString("telefone"),
+                    resultSet.getString("Id"),
+                    resultSet.getString("tituloEleitor"),
+                    resultSet.getDate("dataAposentadoria"));
+
+        } else {
+            return new PessoaJuridica(
+                    resultSet.getString("nome"),
+                    resultSet.getString("telefone"),
+                    resultSet.getString("Id"),
+                    resultSet.getString("inscricaoMunicipal"));
+        }
     }
 
     @Override

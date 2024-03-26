@@ -11,7 +11,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EmprestimoDaoJDBC implements EmprestimoDao {
 
@@ -40,9 +43,9 @@ public class EmprestimoDaoJDBC implements EmprestimoDao {
 
             int linhasAlteradas = statement.executeUpdate();
             if (linhasAlteradas > 0) {
-                System.out.println("Emprestimo cadastrado com sucesso");
+                System.out.println("Emprestimo cadastrado com sucesso.");
             } else {
-                throw new DbException("Erro inesperado, nenhuma linha foi alterada");
+                throw new DbException("Erro inesperado, nenhuma linha foi alterada.");
             }
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
@@ -63,8 +66,7 @@ public class EmprestimoDaoJDBC implements EmprestimoDao {
                     " valorParcela = ?, " +
                     " valorTotalEmprestimo = ?," +
                     " tipoFinanciamento = ?," +
-                    " idPessoa = ?" +
-                    " WHERE Id = ?");
+                    " WHERE id = ?");
             statement.setInt(1, emprestimo.getQuantidadeMeses());
             statement.setInt(2, emprestimo.getQuantidadeParcelasPagas());
             statement.setDouble(3, emprestimo.getValorJuros());
@@ -72,9 +74,10 @@ public class EmprestimoDaoJDBC implements EmprestimoDao {
             statement.setDouble(5, emprestimo.getValorParcela());
             statement.setDouble(6, emprestimo.getValorTotalEmprestimo());
             statement.setString(7, emprestimo.getTipoFinanciamento().name());
-            statement.setString(8, emprestimo.getPessoa().getId());
-            statement.setInt(9, emprestimo.getId());
+            //statement.setString(8, emprestimo.getPessoa().getId());
+            statement.setInt(8, emprestimo.getId());
 
+            System.out.println(statement.getResultSet());
             int linhasAlteradas = statement.executeUpdate();
             if (linhasAlteradas > 0) {
                 System.out.println("Emprestimo atualizado !");
@@ -82,7 +85,7 @@ public class EmprestimoDaoJDBC implements EmprestimoDao {
                 throw new DbException("Erro inesperado, nenhuma linha foi alterada");
             }
         } catch (SQLException e) {
-            throw new DbException(e.getMessage());
+            throw new DbException("Erro inesperado "+ e.getMessage());
         } finally {
             Database.closeStatement(statement);
         }
@@ -113,10 +116,10 @@ public class EmprestimoDaoJDBC implements EmprestimoDao {
         try {
             statement = conexao.prepareStatement(
                     "SELECT EMPRESTIMO.*, " +
-                               "PESSOA.* " +
-                               "FROM EMPRESTIMO INNER JOIN PESSOA " +
-                               "ON EMPRESTIMO.IdPessoa = pessoa.Id " +
-                               "WHERE EMPRESTIMO.Id = ? ");
+                            "PESSOA.* " +
+                            "FROM EMPRESTIMO INNER JOIN PESSOA " +
+                            "ON EMPRESTIMO.IdPessoa = pessoa.Id " +
+                            "WHERE EMPRESTIMO.Id = ? ");
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
 
@@ -137,13 +140,82 @@ public class EmprestimoDaoJDBC implements EmprestimoDao {
 
     @Override
     public List<Emprestimo> findAll() {
-        return null;
+        List<Emprestimo> emprestimoList = new ArrayList<>();
+        Pessoa pessoa ;
+        Emprestimo emprestimo ;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            statement = conexao.prepareStatement(
+                    "SELECT EMPRESTIMO.*, " +
+                            "PESSOA.* " +
+                            "FROM EMPRESTIMO INNER JOIN PESSOA " +
+                            "ON EMPRESTIMO.IdPessoa = pessoa.Id ");
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                pessoa = instanciarPessoa(resultSet);
+                emprestimo = instanciarEmprestimo(resultSet, pessoa);
+                emprestimoList.add(emprestimo);
+            }
+            return emprestimoList;
+            /*evita instanciar varios objetos Pessoa
+            Map<Integer, Emprestimo> map = new HashMap<>();
+            while (resultSet.next()) {
+                Emprestimo emprestimo = map.get(resultSet.getInt("Id"));//Existe alguma pessoa com esse id.
+                if (emprestimo == null) {
+                    Pessoa pessoa = instanciarPessoa(resultSet);
+                    emprestimo = instanciarEmprestimo(resultSet,pessoa);
+                    map.put(emprestimo.getId(), emprestimo);
+                }
+                emprestimoList.add(emprestimo);
+            }*/
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        } finally {
+            Database.closeStatement(statement);
+            Database.closeResultSet(resultSet);
+        }
     }
 
     @Override
-    public List<Emprestimo> findByEmprestimo(Emprestimo emprestimo) {
-        return null;
+    public List<Emprestimo> findByPessoa(Pessoa pessoa) {
+        List<Emprestimo> emprestimoList = new ArrayList<>();
+        Emprestimo emprestimo = null ;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            statement = conexao.prepareStatement(
+                    "SELECT * " +
+                            "FROM EMPRESTIMO  INNER JOIN PESSOA " +
+                            "ON EMPRESTIMO.idPessoa = PESSOA.Id " +
+                            "WHERE PESSOA.Id = ? ");
+            statement.setString(1, pessoa.getId());
+            resultSet = statement.executeQuery();
+
+
+            //evita instanciar varios objetos Pessoa
+            Map<String, Pessoa> map = new HashMap<>();
+            while (resultSet.next()) {
+                pessoa = map.get(resultSet.getString("Id"));//Existe alguma pessoa com esse id.
+                if (pessoa == null) {
+                    pessoa = instanciarPessoa(resultSet);
+                    emprestimo = instanciarEmprestimo(resultSet,pessoa);
+                    map.put(pessoa.getId(), pessoa);
+                }
+                emprestimoList.add(emprestimo);
+            }
+            return emprestimoList;
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        } finally {
+            Database.closeStatement(statement);
+            Database.closeResultSet(resultSet);
+        }
     }
+
 
     private Pessoa instanciarPessoa(ResultSet resultSet) throws SQLException {
         if (TipoPessoa.PESSOA_FISICA.name().equals((resultSet.getString("tipoPessoa")))) {

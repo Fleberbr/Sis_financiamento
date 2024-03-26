@@ -7,8 +7,8 @@ public interface PessoaDao {
 
     public void insert(Pessoa pessoa) ;
     public void update(Pessoa pessoa);
-    public void deleteById(Integer id);
-    public Pessoa findById(Integer id);
+    public void deleteById(String id);
+    public Pessoa findById(String id);
     List<Pessoa> findAll();
-    List<Pessoa> findByPessoa(Pessoa Pessoa);
+
 }

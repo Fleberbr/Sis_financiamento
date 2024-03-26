@@ -81,7 +81,7 @@ public class EmprestimoTest {
     @Test
     public void testeCalcularValorParcelaEmprestimo(){
 
-        Double valorParcelaAtual = this.emprestimo.calcularValorParcelaEmprestimo();
+        Double valorParcelaAtual = this.emprestimo.getValorParcela();
         Assertions.assertEquals(1100.00,valorParcelaAtual);
     }
 }

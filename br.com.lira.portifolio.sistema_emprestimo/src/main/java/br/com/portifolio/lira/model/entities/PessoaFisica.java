@@ -4,7 +4,6 @@ import br.com.portifolio.lira.model.enums.TipoPessoa;
 
 public class PessoaFisica extends Pessoa{
 
-
     private String tituloEleitor;
 
     public PessoaFisica(String nome, String telefone, String id, String tituloEleitor, TipoPessoa tipoPessoa) {
@@ -29,7 +28,9 @@ public class PessoaFisica extends Pessoa{
 
     @Override
     public String toString() {
-        return " Nome: " + getNome() +
+        return "Cpf: " + getId()+
+               " Nome: " + getNome() +
+               " Tipo pessoa: " + getTipoPessoa()+
                " Telefone: " + getTelefone()+
                " Titulo de eleitor: " + tituloEleitor ;
     }

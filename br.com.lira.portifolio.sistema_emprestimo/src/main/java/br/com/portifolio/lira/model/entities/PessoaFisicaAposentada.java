@@ -26,9 +26,10 @@ public class PessoaFisicaAposentada extends PessoaFisica{
 
     @Override
     public String toString() {
-        return  " Cpf: " + getId() +
+        return  "Cpf: " + getId() +
                 " Nome: " + getNome() +
-                " Telefone: " + getTelefone()+
+                " Tipo pessoa: " +getTituloEleitor() +
+                " Telefone: " + getTelefone() +
                 " Titulo de eleitor: " + getTituloEleitor() +
                 " Data aposentadoria: " + getDataAposentadoria();
     }

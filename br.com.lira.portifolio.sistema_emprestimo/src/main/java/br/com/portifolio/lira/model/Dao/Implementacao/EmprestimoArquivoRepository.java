@@ -81,23 +81,21 @@ public class EmprestimoArquivoRepository implements EmprestimoDao {
                 String telefone = vetorLinha[8];
                 String tituloEleitor;
                 Date dataAposentadoria;
-                String inscriçãoMunicipal;
+                String inscricaoMunicipal;
                 switch (tipoPessoa) {
-                    case ("PESSOA_FISICA"):
+                    case ("PESSOA_FISICA") -> {
                         tituloEleitor = vetorLinha[9];
                         pessoa = new PessoaFisica(id, nome, telefone, tituloEleitor);
-                        break;
-
-                    case ("PESSOA_FISICA_APOSENTADA"):
+                    }
+                    case ("PESSOA_FISICA_APOSENTADA") -> {
                         tituloEleitor = vetorLinha[9];
                         dataAposentadoria = formato.parse(vetorLinha[10]);
                         pessoa = new PessoaFisicaAposentada(id, nome, telefone, tituloEleitor, dataAposentadoria);
-                        break;
+                    }
+                    case ("PESSOA_JURIDICA") -> {
+                        inscricaoMunicipal = vetorLinha[9];
+                        pessoa = new PessoaJuridica(id, nome, telefone, inscricaoMunicipal);
 
-                    case ("PESSOA_JURIDICA"): {
-                        inscriçãoMunicipal = vetorLinha[9];
-                        pessoa = new PessoaJuridica(id, nome, telefone, inscriçãoMunicipal);
-                        break;
                     }
                 }
                 listaEmprestimo.add(new Emprestimo(idContrato, valorEmprestimo, quantidadeMeses, quantidadeParcelasPagas, TipoFinanciamento.valueOf(tipoFinanciamento), pessoa));
@@ -152,9 +150,10 @@ public class EmprestimoArquivoRepository implements EmprestimoDao {
     }
 
     @Override
-    public List<Emprestimo> findByEmprestimo(Emprestimo emprestimo) {
+    public List<Emprestimo> findByPessoa(Pessoa pessoa) {
         return null;
     }
+
 }
 
 

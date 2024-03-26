@@ -10,7 +10,10 @@ import br.com.portifolio.lira.model.enums.TipoPessoa;
 
 import java.sql.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PessoaDaoJDBC implements PessoaDao {
 
@@ -51,9 +54,9 @@ public class PessoaDaoJDBC implements PessoaDao {
             if (linhasAlteradas > 0) {
                 System.out.println("Cliente cadastrado com sucesso.");
             } else {
-                throw new DbException("Erro inesperado, nenhuma linha foi alterada");
+                throw new DbException("Falha no cadastro do cliente");
             }
-        } catch (SQLException | ClassCastException e) {
+        } catch (SQLException e) {
             throw new DbException(e.getMessage());
         } finally {
             Database.closeStatement(statement);
@@ -106,12 +109,12 @@ public class PessoaDaoJDBC implements PessoaDao {
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(String id) {
         PreparedStatement statement = null;
         try {
             statement = conexao.prepareStatement("DELETE FROM PESSOA " +
                     "WHERE Id = ?");
-            statement.setInt(1, id);
+            statement.setString(1, id);
             statement.executeUpdate();
 
             //int linhasAlteradas, pode ser usado para testar se foi deletado algum registro.
@@ -123,7 +126,7 @@ public class PessoaDaoJDBC implements PessoaDao {
     }
 
     @Override
-    public Pessoa findById(Integer id) {
+    public Pessoa findById(String id) {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
@@ -131,7 +134,7 @@ public class PessoaDaoJDBC implements PessoaDao {
                         " SELECT * " +
                             " FROM PESSOA " +
                             " WHERE Id = ? ");
-            statement.setInt(1, id);
+            statement.setString(1, id);
             resultSet = statement.executeQuery();
 
             //encontrou registro
@@ -163,7 +166,6 @@ public class PessoaDaoJDBC implements PessoaDao {
                     resultSet.getString("Id"),
                     resultSet.getString("tituloEleitor"),
                     resultSet.getDate("dataAposentadoria"));
-
         } else {
             return new PessoaJuridica(
                     resultSet.getString("nome"),
@@ -175,11 +177,36 @@ public class PessoaDaoJDBC implements PessoaDao {
 
     @Override
     public List<Pessoa> findAll() {
-        return null;
-    }
+        List<Pessoa> pessoaList = new ArrayList<>();
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = conexao.prepareStatement(
+                    " SELECT * FROM PESSOA ");
 
-    @Override
-    public List<Pessoa> findByPessoa(Pessoa pessoa) {
-        return null;
+            resultSet = statement.executeQuery();
+
+            //evita instanciar varios objetos Pessoa
+            Map<String, Pessoa> map = new HashMap<>();
+            while (resultSet.next()) {
+                Pessoa pessoa = map.get(resultSet.getString("Id"));//Existe alguma pessoa com esse id.
+                if (pessoa == null) {
+                    pessoa = instanciarPessoa(resultSet);
+                    map.put(pessoa.getId(), pessoa);
+                }
+                pessoaList.add(pessoa);
+            }
+            /*Solução simples #2
+            while(resultSet.next()) {
+                Seller seller = instanciarSeller(resultSet, department);
+                sellerList.add(seller);
+            }*/
+            return pessoaList;
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        } finally {
+            Database.closeStatement(statement);
+            Database.closeResultSet(resultSet);
+        }
     }
 }

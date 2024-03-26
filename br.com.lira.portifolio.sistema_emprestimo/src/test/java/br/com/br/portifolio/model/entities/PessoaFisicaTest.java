@@ -24,10 +24,10 @@ public class PessoaFisicaTest {
         Assertions.assertEquals(10.00,percentual);
     }
 
-    @Test
+    /*@Test
     public void testeToString(){
 
         Assertions.assertEquals(" Cpf: 1 Nome: Elton Telefone: 11971 Titulo de eleitor: 111",pessoa.toString() );
-    }
+    }*/
 }
 

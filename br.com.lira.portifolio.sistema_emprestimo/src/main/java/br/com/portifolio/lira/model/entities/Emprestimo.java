@@ -93,7 +93,6 @@ public class Emprestimo {
     public void realizarPagamento(int quantidadeParcelasPagas) throws ExceptionError {
         if (consultarContratoQuitado())
             throw new ExceptionError("Pagamento não permitido, contrato está quitado");
-
         if (quantidadeParcelasPagas < 1) {
             throw new ExceptionError("Pagamento não permitido, quantidade de parcelas menor que 1.");
         }
@@ -102,7 +101,7 @@ public class Emprestimo {
             throw new ExceptionError("Pagamento não permitido, Não é possível pagar mais parcelas do que o necessário.");
         }
         this.quantidadeParcelasPagas = quantidadeParcelasPagas;
-        System.out.println("Pagamento efetuado");
+        //System.out.println("Pagamento efetuado");
     }
 
     public boolean consultarContratoQuitado() {

@@ -32,14 +32,14 @@ public class Main {
             switch (opcao) {
                 case (0) -> System.out.println("Fim de programa!");
                 case (1) -> {//Menu de cliente
+                    System.out.println("\n************* MENU CADASTRO DE CLIENTE*************");
+                    System.out.println("1 - Cadastrar um novo cliente");
+                    System.out.println("2 - Pesquisar cliente");
+                    System.out.println("3 - Listar clientes cadastrados");
+                    System.out.println("4 - Em construção");
+                    System.out.println("99 - Retornar ao menu");
                     while (opcao != 99) {
-                        System.out.println("\n************* MENU CADASTRO DE CLIENTE*************");
-                        System.out.println("1 - Cadastrar um novo cliente");
-                        System.out.println("2 - Pesquisar cliente");
-                        System.out.println("3 - Listar clientes cadastrados");
-                        System.out.println("4 - Em construção");
-                        System.out.println("99 - Retornar ao menu");
-                        System.out.print("Digite o número para acessar uma das opções acima:");
+                        System.out.print("\nInforme uma das opções do cadastro de cliente: ");
                         opcao = scanner.nextInt();
                         switch (opcao) {
                             case (99) -> {
@@ -52,7 +52,12 @@ public class Main {
                                 System.out.print("Informe o cpf/cnpj do cliente: ");
                                 String id = scanner.next();
                                 pessoa = PessoaService.buscarPessoa(id);
-                                System.out.println(pessoa);
+                                if (pessoa == null){
+                                    System.out.println("Cliente não encontrado");
+                                }
+                                else {
+                                    System.out.println(pessoa);
+                                }
                             }
                             case (3) -> PessoaService.imprimirListaPessoa();
                             case (4) -> {//Em construção
@@ -61,37 +66,32 @@ public class Main {
                     }
                 }
                 case (2) -> {//Menu de emprestimo
+                    System.out.println("\n************* MENU CADASTRO DE EMPRESTIMO *************");
+                    System.out.println("1 - Cadastrar um emprestimo");
+                    System.out.println("2 - realizar pagamento das parcelas");
+                    System.out.println("3 - Consultar situação do emprestimo");
+                    System.out.println("4 - Calcular valor da mensalidade");
+                    System.out.println("5 - Calcular valor total do financiamento");
+                    System.out.println("6 - Imprimir todos emprestimos");
+                    System.out.println("7 - Imprimir dados do emprestimo de menor valor");
+                    System.out.println("8 - imprimir dados do emprestimo de maior valor");
+                    System.out.println("9 - imprimir valor médio dos emprestimos");
+                    System.out.println("10- Imprimir valor total dos emprestimos");
+                    System.out.println("99- Voltar ao menu principal");
                     do {
-                        System.out.println("\n************* MENU CADASTRO DE EMPRESTIMO *************");
-                        System.out.println("1 - Cadastrar um emprestimo");
-                        System.out.println("2 - realizar pagamento das parcelas");
-                        System.out.println("3 - Consultar situação do emprestimo");
-                        System.out.println("4 - Calcular valor da mensalidade");
-                        System.out.println("5 - Calcular valor total do financiamento");
-                        System.out.println("6 - Imprimir todos emprestimos");
-                        System.out.println("7 - Imprimir dados do emprestimo de menor valor");
-                        System.out.println("8 - imprimir dados do emprestimo de maior valor");
-                        System.out.println("9 - imprimir valor médio dos emprestimos");
-                        System.out.println("10- Imprimir valor total dos emprestimos");
-                        System.out.println("99- Voltar ao menu principal");
-
-                        System.out.print("Informe uma das opções acima: ");
+                        System.out.print("Informe uma das opções do menu de emprestimo: ");
                         opcao = scanner.nextInt();
                         switch (opcao) {
                             case (1) -> {//Cadastrar um financiamento.
                                 System.out.print("Informe o cpf/cnpj do cliente: ");
                                 String id = scanner.next();
-                                pessoa = pessoaService.buscarPessoa(id);
+                                pessoa = PessoaService.buscarPessoa(id);
                                 if (pessoa != null) {
                                     emprestimo = instanciarEmprestimo(scanner, pessoa);
                                     emprestimoService.cadastrarEmprestimo(emprestimo);
                                 } else {
                                     System.err.println("Não foi possível localizar o cliente, por favor efetue o cadastro do cliente antes de efetuar o emprestimo");
                                 }
-                                //EmprestimoArquivoRepository.inserirNovoRegistroArquivoEmprestimo(emprestimo);
-                                //atualiza a lista de emprestimos, buscando do arquivo
-                                //listaEmprestimo = EmprestimoArquivoRepository.buscarDadosEmprestimo();
-                                //listaEmprestimo.add(emprestimo);
                             }
                             case (2) -> { //Realizar pagamento de parcela
                                 try {
@@ -107,7 +107,7 @@ public class Main {
                                 }
                             }
                             case (3) -> {
-                                System.out.print("Informe o número do financiamento que consultar a situacao: ");
+                                System.out.print("Informe o número do emprestimo para consultar a situacao: ");
                                 int id = scanner.nextInt();
                                 emprestimoService.consultarSituacaoEmprestimo(id);
                             }

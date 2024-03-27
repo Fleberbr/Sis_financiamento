@@ -100,7 +100,7 @@ public class Emprestimo {
         if (quantidadeParcelasPagas > parcelaEmAberto) {
             throw new ExceptionError("Pagamento não permitido, Não é possível pagar mais parcelas do que o necessário.");
         }
-        this.quantidadeParcelasPagas = quantidadeParcelasPagas;
+        this.quantidadeParcelasPagas += quantidadeParcelasPagas;
         //System.out.println("Pagamento efetuado");
     }
 

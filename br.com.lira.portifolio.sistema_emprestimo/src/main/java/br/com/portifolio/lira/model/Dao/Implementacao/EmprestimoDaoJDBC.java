@@ -19,6 +19,7 @@ import java.util.Map;
 public class EmprestimoDaoJDBC implements EmprestimoDao {
 
     private Connection conexao;
+    private PessoaDaoJDBC pessoaDaoJDBC;
 
     public EmprestimoDaoJDBC(Connection conexao) {
         this.conexao = conexao;
@@ -58,6 +59,7 @@ public class EmprestimoDaoJDBC implements EmprestimoDao {
     public void update(Emprestimo emprestimo) {
         PreparedStatement statement = null;
         try {
+
             statement = conexao.prepareStatement("UPDATE EMPRESTIMO " +
                     " SET quantidadeMeses = ?," +
                     " quantidadeParcelasPagas = ?, " +
@@ -65,7 +67,7 @@ public class EmprestimoDaoJDBC implements EmprestimoDao {
                     " valorEmprestimo = ?, " +
                     " valorParcela = ?, " +
                     " valorTotalEmprestimo = ?," +
-                    " tipoFinanciamento = ?," +
+                    " tipoFinanciamento = ? " +
                     " WHERE id = ?");
             statement.setInt(1, emprestimo.getQuantidadeMeses());
             statement.setInt(2, emprestimo.getQuantidadeParcelasPagas());
@@ -77,7 +79,6 @@ public class EmprestimoDaoJDBC implements EmprestimoDao {
             //statement.setString(8, emprestimo.getPessoa().getId());
             statement.setInt(8, emprestimo.getId());
 
-            System.out.println(statement.getResultSet());
             int linhasAlteradas = statement.executeUpdate();
             if (linhasAlteradas > 0) {
                 System.out.println("Emprestimo atualizado !");
@@ -125,7 +126,7 @@ public class EmprestimoDaoJDBC implements EmprestimoDao {
 
             //encontrou registro
             if (resultSet.next()) {
-                Pessoa pessoa = instanciarPessoa(resultSet);
+                Pessoa pessoa = pessoaDaoJDBC.instanciarPessoa(resultSet);
                 return instanciarEmprestimo(resultSet, pessoa);
             }
             return null;
@@ -155,7 +156,7 @@ public class EmprestimoDaoJDBC implements EmprestimoDao {
 
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                pessoa = instanciarPessoa(resultSet);
+                pessoa = pessoaDaoJDBC.instanciarPessoa(resultSet);
                 emprestimo = instanciarEmprestimo(resultSet, pessoa);
                 emprestimoList.add(emprestimo);
             }
@@ -201,7 +202,7 @@ public class EmprestimoDaoJDBC implements EmprestimoDao {
             while (resultSet.next()) {
                 pessoa = map.get(resultSet.getString("Id"));//Existe alguma pessoa com esse id.
                 if (pessoa == null) {
-                    pessoa = instanciarPessoa(resultSet);
+                    pessoa = pessoaDaoJDBC.instanciarPessoa(resultSet);
                     emprestimo = instanciarEmprestimo(resultSet,pessoa);
                     map.put(pessoa.getId(), pessoa);
                 }
@@ -217,30 +218,6 @@ public class EmprestimoDaoJDBC implements EmprestimoDao {
     }
 
 
-    private Pessoa instanciarPessoa(ResultSet resultSet) throws SQLException {
-        if (TipoPessoa.PESSOA_FISICA.name().equals((resultSet.getString("tipoPessoa")))) {
-            return new PessoaFisica(
-                    resultSet.getString("nome"),
-                    resultSet.getString("telefone"),
-                    resultSet.getString("Id"),
-                    resultSet.getString("tituloEleitor"),
-                    TipoPessoa.PESSOA_FISICA);
-        } else if (TipoPessoa.PESSOA_FISICA_APOSENTADA.name().equals(resultSet.getString("tipoPessoa"))) {
-            return new PessoaFisicaAposentada(
-                    resultSet.getString("nome"),
-                    resultSet.getString("telefone"),
-                    resultSet.getString("Id"),
-                    resultSet.getString("tituloEleitor"),
-                    resultSet.getDate("dataAposentadoria"));
-
-        } else {
-            return new PessoaJuridica(
-                    resultSet.getString("nome"),
-                    resultSet.getString("telefone"),
-                    resultSet.getString("Id"),
-                    resultSet.getString("inscricaoMunicipal"));
-        }
-    }
 
     private Emprestimo instanciarEmprestimo(ResultSet resultSet, Pessoa pessoa) throws SQLException {
         return new Emprestimo(

@@ -42,7 +42,9 @@ public class EmprestimoService {
     public void consultarSituacaoEmprestimo(int id) {
         emprestimo = buscarEmprestimo(id);
         if (emprestimo != null) {
+            System.out.println("************* CONSULTA SITUAÇÃO DO CONTRATO *************");
             System.out.println(emprestimo.consultarContratoQuitado() ? "CONTRATO QUITADO" : "CONTRATO EM ABERTO");
+            System.out.println("************* CONSULTA SITUAÇÃO DO CONTRATO *************");
         } else {
             System.err.print("Emprestimo não encontrado\n\n");
         }
@@ -51,7 +53,9 @@ public class EmprestimoService {
     public void consultarMensalidadeContrato(int id) {
         emprestimo = buscarEmprestimo(id);
         if (emprestimo != null) {
+            System.out.println("************* C0NSULTA VALOR PARCELA DO EMPRESTIMO *************");
             System.out.println(emprestimo.getValorParcela());
+            System.out.println("************* C0NSULTA VALOR PARCELA DO EMPRESTIMO *************");
         } else {
             System.err.print("Emprestimo não encontrado\n\n");
         }
@@ -60,7 +64,9 @@ public class EmprestimoService {
     public void consultarValorTotalContrato(int id) {
         emprestimo = buscarEmprestimo(id);
         if (emprestimo != null) {
+            System.out.println("************* C0NSULTA MENSALIDADE EMPRESTIMO *************");
             System.out.println(emprestimo.getValorParcela());
+            System.out.println("************* C0NSULTA MENSALIDADE EMPRESTIMO *************");
         } else {
             System.err.print("Emprestimo não encontrado\n\n");
         }
@@ -107,8 +113,8 @@ public class EmprestimoService {
                 .stream()
                 .mapToDouble(Emprestimo::getValorEmprestimo)
                 .sum();
-        System.out.println("************* CADASTRO DE EMPRESTIMO *************");
+        System.out.println("************* INDICADORES EMPRESTIMO *************");
         System.out.println("Valor total dos emprestimos: " + String.format("%.2f", valorTotalEmprestimos));
-        System.out.println("************* CADASTRO DE EMPRESTIMO *************");
+        System.out.println("************* INDICADORES EMPRESTIMO *************");
     }
 }

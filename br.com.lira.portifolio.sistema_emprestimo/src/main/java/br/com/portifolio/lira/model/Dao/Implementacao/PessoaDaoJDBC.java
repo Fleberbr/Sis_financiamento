@@ -19,6 +19,7 @@ public class PessoaDaoJDBC implements PessoaDao {
 
     private Connection conexao;
 
+    public PessoaDaoJDBC(){}
     public PessoaDaoJDBC(Connection conexao) {
         this.conexao = conexao;
     }
@@ -151,7 +152,7 @@ public class PessoaDaoJDBC implements PessoaDao {
         }
     }
 
-    private Pessoa instanciarPessoa(ResultSet resultSet) throws SQLException {
+    protected Pessoa instanciarPessoa(ResultSet resultSet) throws SQLException {
         if (TipoPessoa.PESSOA_FISICA.name().equals((resultSet.getString("tipoPessoa")))) {
             return new PessoaFisica(
                     resultSet.getString("nome"),

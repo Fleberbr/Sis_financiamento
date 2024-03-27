@@ -30,6 +30,6 @@ public class PessoaFisicaAposentadoTest {
     @Test
     public void testeToString(){
 
-        Assertions.assertEquals(" Cpf: 1 Nome: Elton Telefone: 11971 Titulo de eleitor: 111 Data aposentadoria: Sun Jan 01 00:00:00 BRT 2023",pessoa.toString() );
+        Assertions.assertEquals(" Cpf: 1 Nome: Elton Tipo pessoa: 111 Telefone: 11971 Titulo de eleitor: 111 Data aposentadoria: Sun Jan 01 00:00:00 BRT 2023",pessoa.toString() );
     }
 }

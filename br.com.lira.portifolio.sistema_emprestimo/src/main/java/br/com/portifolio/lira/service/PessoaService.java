@@ -11,8 +11,8 @@ public class PessoaService {
 
 
     public void cadastrarPessoa(Pessoa pessoa){
-        pessoa = pessoaDao.findById(pessoa.getId());
-        if(pessoa == null) {
+
+        if(pessoaDao.findById(pessoa.getId()) == null) {
             pessoaDao.insert(pessoa);
         }
         else{

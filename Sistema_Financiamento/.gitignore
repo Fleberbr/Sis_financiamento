@@ -7,6 +7,10 @@
 # BlueJ files
 *.ctxt
 
+# Pasta Target
+target
+
+
 # Pasta idea
 .idea
 

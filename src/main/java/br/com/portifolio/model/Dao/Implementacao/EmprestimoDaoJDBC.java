@@ -3,7 +3,6 @@ package br.com.portifolio.model.Dao.Implementacao;
 import br.com.portifolio.model.Dao.EmprestimoDao;
 import br.com.portifolio.model.db.Database;
 import br.com.portifolio.model.db.DbException;
-import br.com.portifolio.lira.model.entities.*;
 import br.com.portifolio.model.entities.Emprestimo;
 import br.com.portifolio.model.entities.Pessoa;
 import br.com.portifolio.model.enums.TipoFinanciamento;

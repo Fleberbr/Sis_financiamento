@@ -1,7 +1,6 @@
 package br.com.portifolio.application;
 
 import br.com.portifolio.model.db.DbException;
-import br.com.portifolio.lira.model.entities.*;
 import br.com.portifolio.model.entities.*;
 import br.com.portifolio.model.enums.TipoFinanciamento;
 import br.com.portifolio.model.exception.ExceptionError;

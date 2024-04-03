@@ -4,7 +4,6 @@ package br.com.portifolio.model.Dao.Implementacao;
 import br.com.portifolio.model.Dao.PessoaDao;
 import br.com.portifolio.model.db.Database;
 import br.com.portifolio.model.db.DbException;
-import br.com.portifolio.lira.model.entities.*;
 import br.com.portifolio.model.entities.Pessoa;
 import br.com.portifolio.model.entities.PessoaFisica;
 import br.com.portifolio.model.entities.PessoaFisicaAposentada;

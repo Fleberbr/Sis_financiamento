@@ -1,7 +1,6 @@
 package br.com.portifolio.application;
 
 import br.com.portifolio.model.Dao.Implementacao.EmprestimoArquivoRepository;
-import br.com.portifolio.lira.model.entities.*;
 import br.com.portifolio.model.entities.*;
 import br.com.portifolio.model.enums.TipoFinanciamento;
 import br.com.portifolio.model.exception.ExceptionError;
